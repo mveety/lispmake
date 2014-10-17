@@ -1,0 +1,6 @@
+lispmake -- shitty makefiles for lisp
+
+How to build:
+if you have lispmake: lispmake ; lisp --load build.lisp
+if you don't have lispmake: lisp --load bootstrap.lisp
+

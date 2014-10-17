@@ -1,0 +1,8 @@
+(:package lispmake)
+(:toplevel main)
+(:quicklisp (getopt))
+(:file "package.lisp")
+(:file "lispmake.lisp")
+(:file "plugin.lisp")
+(:output "lispmake")
+(:generate)
