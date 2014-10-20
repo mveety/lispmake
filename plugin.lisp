@@ -14,6 +14,8 @@
 
 (defun load-plugin (name file toplevel init-toplevel)
   (lm-debug "load-plugin" "loading a plugin")
+  (if *debugging*
+      (format t "lispmake: debug: installing plugin ~A from file ~A with toplevel ~A and running ~A~%" name file toplevel init-toplevel))
   (if (equal (type-of toplevel) 'symbol)
       (if (equal (type-of name) 'keyword)
 	  (progn
@@ -25,6 +27,8 @@
 
 (defun install-plugin (name toplevel)
   (lm-debug "install-plugin" "installing a plugin")
+  (if *debugging*
+      (format t "lispmake: debug: installing plugin ~A with toplevel ~A~%" name toplevel))
   (if (equal (type-of toplevel) 'symbol)
       (if (equal (type-of name) 'keyword)
 	  (setf *plugins* (append *plugins* (list (list name toplevel))))
