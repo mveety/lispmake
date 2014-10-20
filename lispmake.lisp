@@ -120,7 +120,7 @@
 
 (defun main ()
   (format t "lispmake r~A~%" *lispmake-version*)
-  (install-plugin :plugin 'pl-plugin)
+;  (install-plugin :plugin 'pl-plugin)
   (with-open-file (lmkfile "LMakefile")
     (loop for form = (read lmkfile nil nil)
 	 until (eq form nil)
