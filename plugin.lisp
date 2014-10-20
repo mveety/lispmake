@@ -13,8 +13,8 @@
 ;;     * testing. It works for me, it might not for you
 
 (defun load-plugin (name file toplevel init-toplevel)
- ; (setf toplevel (car toplevel))
- ; (setf init-toplevel (car init-toplevel))
+  (setf toplevel (car toplevel))
+  (setf init-toplevel (car init-toplevel))
   (lm-debug "load-plugin" "loading a plugin")
   (format t "debug: toplevel=~A init-toplevel=~A~%"
 	  (type-of toplevel) (type-of init-toplevel))
