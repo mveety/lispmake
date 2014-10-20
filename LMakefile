@@ -1,3 +1,5 @@
+(:plugin :compile-file "plugins/compile.lisp"
+	pl-compile-file pl-init-compile-file)
 (:package lispmake)
 (:toplevel main)
 (:lisp sbcl)

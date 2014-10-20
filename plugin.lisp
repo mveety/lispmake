@@ -13,17 +13,22 @@
 ;;     * testing. It works for me, it might not for you
 
 (defun load-plugin (name file toplevel init-toplevel)
+ ; (setf toplevel (car toplevel))
+ ; (setf init-toplevel (car init-toplevel))
   (lm-debug "load-plugin" "loading a plugin")
+  (format t "debug: toplevel=~A init-toplevel=~A~%"
+	  (type-of toplevel) (type-of init-toplevel))
+  (format t "debug: toplevel=~A init-toplevel=~A~%"
+	  toplevel init-toplevel)
   (if *debugging*
       (format t "lispmake: debug: installing plugin ~A from file ~A with toplevel ~A and running ~A~%" name file toplevel init-toplevel))
-  (if (equal (type-of toplevel) 'symbol)
-      (if (equal (type-of name) 'keyword)
-	  (progn
-	    (load file)
-	    (setf *plugins* (append *plugins* (list (list name toplevel))))
-	    (funcall init-toplevel))
-	  (lm-error "load-plugin" "arg name should be type keyword"))
-      (lm-error "load-plugin" "arg toplevel should be type symbol")))
+  (if (equal (type-of name) 'keyword)
+      (progn
+	(load file)
+	(setf *plugins* (append *plugins* (list (list name toplevel))))
+	(lm-debug "load-plugin" "running toplevel function")
+	(funcall init-toplevel))
+      (lm-error "load-plugin" "arg name should be type keyword")))
 
 (defun install-plugin (name toplevel)
   (lm-debug "install-plugin" "installing a plugin")
