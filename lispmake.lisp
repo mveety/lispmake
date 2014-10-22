@@ -12,7 +12,7 @@
 ;;     * build targets (ala make) (could be a plugin)
 ;;     * testing. It works for me, it might not for you
 
-(defvar *debugging* (not nil))  ;; enable or disable debugging output
+(defvar *debugging* nil)  ;; enable or disable debugging output
 (defvar *lispmake-version* 10)
 (defvar *sources* nil)
 (defvar *outfile* nil)

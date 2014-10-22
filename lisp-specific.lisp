@@ -37,11 +37,9 @@
 	  (car fname) (car package) (car toplevel)))
 
 (defun pl-compile-file-pregen ()
-  (lm-debug "pl-compile-file-pregen" "running pregen")
-  (if (not *compile-files*)
+  (if (not (equal *compile-files* nil))
       (dolist (x *compile-files*)
-	(lm-debug "pl-compile-file-pregen" "adding file")
-	(format t "(compile-file ~A :output-file ~A :verbose t)~%" x (concatenate 'string x ".fasl")))))
+	(format t "(compile-file \"~A\" :output-file \"~A\" :verbose t)~%" x (concatenate 'string x ".fasl")))))
 
 (defun pl-compile-file (args)
   (if (not (equal (length args) 1))
