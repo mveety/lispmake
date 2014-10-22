@@ -41,7 +41,7 @@
   (if (not *compile-files*)
       (dolist (x *compile-files*)
 	(lm-debug "pl-compile-file-pregen" "adding file")
-	(format t "(compile-file ~A :output-file ~A)~%" x (concatenate 'string x ".fasl")))))
+	(format t "(compile-file ~A :output-file ~A :verbose t)~%" x (concatenate 'string x ".fasl")))))
 
 (defun pl-compile-file (args)
   (if (not (equal (length args) 1))

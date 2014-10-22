@@ -4,7 +4,11 @@ How to build:
 if you have lispmake: lispmake ; lisp --load build.lisp
 if you don't have lispmake: lisp --load bootstrap.lisp
 
-RELEASE 9 ADDITIONS:
+REVISION 10 ADDITIONS:
+	 Added support for creating fasl files
+	 Made crashing cleaner and easier for the lisp illiterate
+
+REVISION 9 ADDITIONS:
 	Support for multple lisps (sbcl, ccl, and clisp)
 	Made eval not crash as much
-	Plugins work better
+	<strike>Plugins work better</strike>

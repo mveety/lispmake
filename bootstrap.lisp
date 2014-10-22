@@ -2,8 +2,6 @@
 ;; DO NOT EDIT
 (load #P"package.lisp")
 (load #P"lispmake.lisp")
+(load #P"lisp-specific.lisp")
 (load #P"plugin.lisp")
-(load #P"lisps.lisp")
-#+sbcl (sb-ext:save-lisp-and-die "lispmake" :executable t :toplevel #'LISPMAKE:MAIN)
-#+ccl (ccl:save-application lispmake :toplevel-function #'LISPMAKE:MAIN :prepend-kernel t)
-#+clisp (ext:saveinitmem lispmake :init-function #'LISPMAKE:MAIN :executable t :norc t)
+(sb-ext:save-lisp-and-die "lispmake" :executable t :toplevel #'LISPMAKE:MAIN)

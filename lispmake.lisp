@@ -20,7 +20,7 @@
 (defvar *toplevel* nil)
 (defvar *quickloads* nil)
 (defvar *generate* nil)
-(defvar *compile-files nil)
+(defvar *compile-files* nil)
 (defvar *lisp-target* 'default)
 (defvar *plugins* '((:package pl-package)
 		    (:toplevel pl-toplevel)
