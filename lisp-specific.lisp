@@ -59,12 +59,11 @@
 				 (declare (ignore h))
 				 (format t "lispmake: crash: please report the below~%")
 				 (print c)
-				 (sb-ext:quit)))
+				 (sb-ext:exit)))
   #-sbcl (format t "lispmake: warning: lispmake does not support debugger handling in this lisp~%")
   nil)
 
-(defun run-build-process (x)
-  (declare (ignore x))
+(defun run-build-process ()
   (if (not (equal *lisp-executable* nil))
       (progn
         #+sbcl (sb-ext:run-program *lisp-executable* '("--load" "build.lisp"))

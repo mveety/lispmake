@@ -1,6 +1,7 @@
 (:package lispmake)
 (:toplevel main)
 (:lisp all)
+(:build-with "/usr/local/bin/sbcl")
 (:compile-file "package.lisp")
 (:compile-file "lispmake.lisp")
 (:compile-file "lisp-specific.lisp")
