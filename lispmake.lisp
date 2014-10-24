@@ -86,7 +86,8 @@
 
 (defun pl-eval (args)
   (lm-debug "pl-eval" "evaluating lisp")
-  (eval args))
+  (let ()
+    (eval args)))
 
 (defun pl-lisp (args)
   (lm-debug "pl-lisp" "setting default lisp")
@@ -132,6 +133,7 @@
   (install-plugin :build-with 'pl-lisp-executable)
   (install-pregen-hook 'pl-compile-file-pregen)
   (install-postgen-hook 'run-build-process)
+  (export '(install-plugin install-pregen-hook install-postgen-hook))
   (with-open-file (lmkfile "LMakefile")
     (loop for form = (read lmkfile nil nil)
 	 until (eq form nil)

@@ -11,4 +11,6 @@
 (:file "lisp-specific.lisp.fasl")
 (:file "plugin.lisp")
 (:output "lispmake")
+;(:eval (install-postgen-hook (lambda () (run-program "/bin/rm" '("build.lisp" "*.fasl")))))
+;(:eval (install-postgen-hook (lambda () (print 'this-is-a-test))))
 (:generate)
