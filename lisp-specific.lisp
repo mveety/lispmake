@@ -39,7 +39,8 @@
 (defun pl-compile-file-pregen ()
   (if (not (equal *compile-files* nil))
       (dolist (x *compile-files*)
-	(format t "(compile-file \"~A\" :output-file \"~A\" :verbose t)~%" x (concatenate 'string x ".fasl")))))
+	(format t "(compile-file \"~A\" :output-file \"~A\" :verbose t)~%" x
+                (concatenate 'string x ".fasl")))))
 
 (defun pl-compile-file (args)
   (if (not (equal (length args) 1))
@@ -61,3 +62,16 @@
 				 (sb-ext:quit)))
   #-sbcl (format t "lispmake: warning: lispmake does not support debugger handling in this lisp~%")
   nil)
+
+(defun run-build-process (x)
+  (declare (ignore x))
+  (if (not (equal *lisp-executable* nil))
+      (progn
+        #+sbcl (sb-ext:run-program *lisp-executable* '("--load" "build.lisp"))
+        #-sbcl (format t "lispmake: warning: building not supported in this lisp~%"))))
+
+(defun pl-lisp-executable (args)
+  (if (not (equal args nil))
+      (setf *lisp-executable* (car args))
+      (lm-error "pl-lisp-executable" "args must be a string")))
+

@@ -12,8 +12,8 @@
 ;;     * build targets (ala make) (could be a plugin)
 ;;     * testing. It works for me, it might not for you
 
-(defvar *debugging* nil)  ;; enable or disable debugging output
-(defvar *lispmake-version* 10)
+(defvar *debugging* (not nil))  ;; enable or disable debugging output
+(defvar *lispmake-version* 11)
 (defvar *sources* nil)
 (defvar *outfile* nil)
 (defvar *lm-package* nil)
@@ -21,15 +21,14 @@
 (defvar *quickloads* nil)
 (defvar *generate* nil)
 (defvar *compile-files* nil)
+(defvar *lisp-executable* nil)
 (defvar *lisp-target* 'default)
 (defvar *plugins* '((:package pl-package)
 		    (:toplevel pl-toplevel)
 		    (:file pl-file)
 		    (:output pl-output)
 		    (:quicklisp pl-quicklisp)
-		    (:generate pl-generate)
-		    (:eval pl-eval)
-		    (:lisp pl-lisp)))
+		    (:generate pl-generate)))
 (defvar *pregen-hooks* nil)
 (defvar *postgen-hooks* nil)
 
@@ -81,6 +80,7 @@
       (setf *quickloads* (append *quickloads* (list args)))))
 
 (defun pl-generate (args)
+  (declare (ignore args))
   (setf *generate* (not *generate*)))
 
 (defun pl-eval (args)
@@ -104,6 +104,7 @@
     (lm-debug "generate" "generating save-and-die form")
     (if *generate*
 	(buildexe mkfile *outfile* *lm-package* *toplevel* *lisp-target*))
+    (force-output mkfile)
     (run-plugin-postgen mkfile)))
 
 (defun runner (forms)
@@ -124,8 +125,12 @@
       (format t "lispmake r~A~%" *lispmake-version*)
       (disable-debugger))
   (install-plugin :plugin 'pl-plugin)
+  (install-plugin :eval 'pl-eval)
+  (install-plugin :lisp 'pl-lisp)
   (install-plugin :compile-file 'pl-compile-file)
+  (install-plugin :build-with 'pl-lisp-executable)
   (install-pregen-hook 'pl-compile-file-pregen)
+  (install-postgen-hook 'run-build-process)
   (with-open-file (lmkfile "LMakefile")
     (loop for form = (read lmkfile nil nil)
 	 until (eq form nil)
