@@ -13,7 +13,7 @@
 ;;     * testing. It works for me, it might not for you
 
 (defvar *debugging* nil)  ;; enable or disable debugging output
-(defvar *lispmake-version* 10)
+(defvar *lispmake-version* 11)
 (defvar *sources* nil)
 (defvar *outfile* nil)
 (defvar *lm-package* nil)
