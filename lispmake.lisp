@@ -81,17 +81,17 @@
 	(setf *quickloads* (append *quickloads* (list x))))
       (setf *quickloads* (append *quickloads* (list args)))))
 
-(defun pl-generate (args)
-  (declare (ignore args))
-  (setf *generate* (not *generate*)))
-
 (defun pl-eval (args)
-  (lm-debug "pl-eval" "evaluating lisp")
-  (eval args)
+  (lm-debug "pl-eval" "evaluating lisp") 
+  (eval args))
 
 (defun pl-lisp (args)
   (lm-debug "pl-lisp" "setting default lisp")
   (setf *lisp-target* (car args)))
+
+(defun pl-generate (args)
+  (declare (ignore args))
+  (setf *generate* (not *generate*)))
 
 (defun pl-enable-build (args)
   (declare (ignore args))
