@@ -87,8 +87,7 @@
 
 (defun pl-eval (args)
   (lm-debug "pl-eval" "evaluating lisp")
-  (let ()
-    (eval args)))
+  (eval args)
 
 (defun pl-lisp (args)
   (lm-debug "pl-lisp" "setting default lisp")
@@ -138,7 +137,7 @@
       (format t "lispmake r~A~%" *lispmake-version*)
       (disable-debugger))
   (install-plugin :plugin 'pl-plugin)
-  (install-plugin :eval 'pl-eval)
+;  (install-plugin :eval 'pl-eval)
   (install-plugin :lisp 'pl-lisp)
   (install-plugin :compile-file 'pl-compile-file)
   (install-plugin :build-with 'pl-lisp-executable)
