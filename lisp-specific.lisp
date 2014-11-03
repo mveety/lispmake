@@ -27,13 +27,13 @@
   (if *debugging*
       (format t "lispmake: debug: lisp=~A~%" lisp))
   (format outstream
-	  "#+sbcl (sb-ext:save-lisp-and-die \"~A\" :executable t :toplevel #'~A:~A)~%"
+   "#+sbcl (sb-ext:save-lisp-and-die \"~A\" :executable t :toplevel #'~A:~A)~%"
 	  (car fname) (car package) (car toplevel))
   (format outstream
-	  "#+ccl (ccl:save-application ~A :toplevel-function #'~A:~A :prepend-kernel t)~%"
+   "#+ccl (ccl:save-application ~A :toplevel-function #'~A:~A :prepend-kernel t)~%"
 	  (car fname) (car package) (car toplevel))
   (format outstream
-	  "#+clisp (ext:saveinitmem ~A :init-function #'~A:~A :executable t :norc t)~%"
+   "#+clisp (ext:saveinitmem ~A :init-function #'~A:~A :executable t :norc t)~%"
 	  (car fname) (car package) (car toplevel)))
 
 (defun pl-compile-file-pregen ()
@@ -57,17 +57,20 @@
 (defun disable-debugger ()
   #+sbcl (setf *debugger-hook* (lambda (c h)
 				 (declare (ignore h))
-				 (format t "lispmake: crash: please report the below~%")
+				 (format t 
+                                  "lispmake: crash: please report the below~%")
 				 (print c)
 				 (sb-ext:exit)))
-  #-sbcl (format t "lispmake: warning: lispmake does not support debugger handling in this lisp~%")
+  #-sbcl (format t 
+    "lispmake: warning: lispmake does not support debugger handling in this lisp~%")
   nil)
 
 (defun run-build-process ()
   (if (not (equal *lisp-executable* nil))
       (progn
         #+sbcl (sb-ext:run-program *lisp-executable* '("--load" "build.lisp"))
-        #-sbcl (format t "lispmake: warning: building not supported in this lisp~%"))))
+        #-sbcl (format t 
+		"lispmake: warning: building not supported in this lisp~%"))))
 
 (defun pl-lisp-executable (args)
   (if (not (equal args nil))
