@@ -12,8 +12,8 @@
 ;;     * build targets (ala make) (could be a plugin)
 ;;     * testing. It works for me, it might not for you
 
-;(defvar *debugging* (not nil))  ;; enable or disable debugging output
-(defvar *debugging* nil)
+(defvar *debugging* (not nil))  ;; enable or disable debugging output
+;(defvar *debugging* nil)
 (defvar *lispmake-version* 11)
 (defvar *sources* nil)
 (defvar *outfile* nil)
@@ -23,6 +23,7 @@
 (defvar *generate* nil)
 (defvar *compile-files* nil)
 (defvar *lisp-executable* nil)
+(defvar *do-build* nil)
 (defvar *lisp-target* 'default)
 (defvar *plugins* '((:package pl-package)
 		    (:toplevel pl-toplevel)
@@ -93,6 +94,10 @@
   (lm-debug "pl-lisp" "setting default lisp")
   (setf *lisp-target* (car args)))
 
+(defun pl-enable-build (args)
+  (declare (ignore args))
+  (setf *do-build* (not *do-build*)))
+
 (defun generate ()
   (with-open-file (mkfile "build.lisp" :direction :output :if-exists :supersede)
     (format 
@@ -110,7 +115,10 @@
     (if *generate*
 	(buildexe mkfile *outfile* *lm-package* *toplevel* *lisp-target*))
     (force-output mkfile)
-    (run-plugin-postgen mkfile)))
+    (run-plugin-postgen mkfile))
+  (format t "lispmake: doing build...~%")
+  (if *do-build*
+      (run-build-process)))
 
 (defun runner (forms)
   (if (not (equal (type-of forms) 'cons))
@@ -134,9 +142,10 @@
   (install-plugin :lisp 'pl-lisp)
   (install-plugin :compile-file 'pl-compile-file)
   (install-plugin :build-with 'pl-lisp-executable)
+  (install-plugin :do-build 'pl-enable-build)
   (install-pregen-hook 'pl-compile-file-pregen)
   (install-postgen-hook 'run-build-process)
-  (export '(install-plugin install-pregen-hook install-postgen-hook))
+  (export '(install-plugin install-pregen-hook install-postgen-hook) :lispmake)
   (with-open-file (lmkfile "LMakefile")
     (loop for form = (read lmkfile nil nil)
 	 until (eq form nil)
