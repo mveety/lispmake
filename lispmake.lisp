@@ -25,12 +25,7 @@
 (defvar *lisp-executable* nil)
 (defvar *do-build* nil)
 (defvar *lisp-target* 'default)
-(defvar *plugins* '((:package pl-package)
-		    (:toplevel pl-toplevel)
-		    (:file pl-file)
-		    (:output pl-output)
-		    (:quicklisp pl-quicklisp)
-		    (:generate pl-generate)))
+(defvar *plugins* nil)
 (defvar *pregen-hooks* nil)
 (defvar *postgen-hooks* nil)
 
@@ -81,10 +76,6 @@
 	(setf *quickloads* (append *quickloads* (list x))))
       (setf *quickloads* (append *quickloads* (list args)))))
 
-(defun pl-generate (args)
-  (declare (ignore args))
-  (setf *generate* (not *generate*)))
-
 (defun generate ()
   (with-open-file (mkfile "build.lisp" :direction :output :if-exists :supersede)
     (format 
@@ -124,6 +115,15 @@
   (if *debugging*
       (format t "lispmake r~A~%" *lispmake-version*)
       (disable-debugger))
+  (install-plugin :package 'pl-package)
+  (install-plugin :toplevel 'pl-toplevel)
+  (install-plugin :file 'pl-file)
+  (install-plugin :output 'pl-output)
+  (install-plugin :quicklisp 'pl-quicklisp)
+  (install-plugin :generate
+		  (lambda (args)
+		    (declare (ignore args))
+		    (setf *generate* (not *generate))))
   (install-plugin :plugin 'pl-plugin)
   (install-plugin :eval
 		  (lambda (args)
