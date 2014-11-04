@@ -10,6 +10,7 @@ REVISION 11 ADDITIONS:
 	 Ton of cleanups
 	 Quicklisp integration works better
 	 File definitions work better
+	 Less Broken
 
 REVISION 10 ADDITIONS:
 	 Added support for creating fasl files
