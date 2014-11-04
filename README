@@ -5,6 +5,26 @@ if you have lispmake: lispmake ; lisp --load build.lisp
 if you have lispmake rev 11 or higher: lispmake
 if you don't have lispmake: lisp --load bootstrap.lisp
 
+Targets:
+    By default lispmake looks for the file "LMakefile". If it doesn't
+    exist it just crashes and has lisp handle it. Targets are just
+    extensions to the default name. So if you want an install
+    target you make a file called "LMakefile.install" and run
+    lispmake like "lispmake --target=install".
+
+Other Files:
+    Lispmake also handles using other files instead of the LMakefile.
+    if you invoke lispmake like "lispmake --file=[filename]" it
+    allows you to use that to build. Targets still work with the
+    normal convention of [filename].[target] .
+
+REVISION 12 ADDITIONS:
+	 Ability to use files other than LMakefile
+	 Ability to have other make targets
+	 Now requires quicklisp (sorry!)
+	 Ability to run other executables (:exec ("cp" "lispmake" "/usr/local/bin/"))
+	 More Broken
+
 REVISION 11 ADDITIONS:
 	 Ability to build with lispmake (no more running sbcl --load)
 	 Ton of cleanups
@@ -17,6 +37,6 @@ REVISION 10 ADDITIONS:
 	 Made crashing cleaner and easier for the lisp illiterate
 
 REVISION 9 ADDITIONS:
-	Support for multple lisps (sbcl, ccl, and clisp)
-	Made eval not crash as much
-	<strike>Plugins work better</strike>
+	 Support for multple lisps (sbcl, ccl, and clisp)
+	 Made eval not crash as much
+	 <strike>Plugins work better</strike>
