@@ -67,7 +67,7 @@
   (setf *toplevel* args))
 
 (defun pl-file (args)
-  (if (equal (type-of (type-of args)) 'cons)
+  (if (listp args)
       (dolist (x args)
 	(setf *sources* (append *sources* (list x))))
       (setf *sources* (append *sources* (list args)))))
@@ -76,26 +76,14 @@
   (setf *outfile* args))
 
 (defun pl-quicklisp (args)
-  (if (equal (type-of args) 'cons)
+  (if (listp args)
       (dolist (x args)
 	(setf *quickloads* (append *quickloads* (list x))))
       (setf *quickloads* (append *quickloads* (list args)))))
 
-(defun pl-eval (args)
-  (lm-debug "pl-eval" "evaluating lisp") 
-  (eval args))
-
-(defun pl-lisp (args)
-  (lm-debug "pl-lisp" "setting default lisp")
-  (setf *lisp-target* (car args)))
-
 (defun pl-generate (args)
   (declare (ignore args))
   (setf *generate* (not *generate*)))
-
-(defun pl-enable-build (args)
-  (declare (ignore args))
-  (setf *do-build* (not *do-build*)))
 
 (defun generate ()
   (with-open-file (mkfile "build.lisp" :direction :output :if-exists :supersede)
@@ -120,7 +108,7 @@
       (run-build-process)))
 
 (defun runner (forms)
-  (if (not (equal (type-of forms) 'cons))
+  (if (not (listp forms))
       (lm-error "runner" "form not of type cons in LMakefile")
       (progn
 	(let ((cmd (car forms))
@@ -137,14 +125,20 @@
       (format t "lispmake r~A~%" *lispmake-version*)
       (disable-debugger))
   (install-plugin :plugin 'pl-plugin)
-;  (install-plugin :eval 'pl-eval)
-  (install-plugin :lisp 'pl-lisp)
+  (install-plugin :eval
+		  (lambda (args)
+		    (eval args)))
+  (install-plugin :lisp
+		  (lambda (args)
+		    (setf *lisp-target* (car args))))
   (install-plugin :compile-file 'pl-compile-file)
   (install-plugin :build-with 'pl-lisp-executable)
-  (install-plugin :do-build 'pl-enable-build)
+  (install-plugin :do-build
+		  (lambda (args)
+		    (declare (ignore args))
+		    (setf *do-build* (not *do-build*))))
   (install-pregen-hook 'pl-compile-file-pregen)
   (install-postgen-hook 'run-build-process)
-  (export '(install-plugin install-pregen-hook install-postgen-hook) :lispmake)
   (with-open-file (lmkfile "LMakefile")
     (loop for form = (read lmkfile nil nil)
 	 until (eq form nil)
