@@ -1,9 +1,12 @@
 (:package lispmake)
 (:toplevel main)
+(:quicklisp unix-options)
 (:lisp all)
 (:build-with "/usr/local/bin/sbcl")
 (:do-build)
-(:file ("package.lisp" "lispmake.lisp" "lisp-specific.lisp" "plugin.lisp"))
+(:file ("package.lisp" "lispmake.lisp"
+	"lisp-specific.lisp" "plugin.lisp"
+	"options.lisp"))
 (:output "lispmake")
 (:generate)
 

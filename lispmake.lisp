@@ -14,7 +14,7 @@
 
 ;(defvar *debugging* (not nil))  ;; enable or disable debugging output
 (defvar *debugging* nil)
-(defvar *lispmake-version* 11)
+(defvar *lispmake-version* 12)
 (defvar *sources* nil)
 (defvar *outfile* nil)
 (defvar *lm-package* nil)
@@ -28,6 +28,7 @@
 (defvar *plugins* nil)
 (defvar *pregen-hooks* nil)
 (defvar *postgen-hooks* nil)
+(defvar *lmakefile* "LMakefile")
 
 (defun lm-error (function explain)
   (format t "lispmake: error: ~A: ~A~%" function explain)
@@ -141,7 +142,8 @@
 		    (declare (ignore args))
 		    (setf *do-build* (not *do-build*))))
   (install-pregen-hook 'pl-compile-file-pregen)
-  (with-open-file (lmkfile "LMakefile")
+  (handle-options)
+  (with-open-file (lmkfile *lmakefile*)
     (loop for form = (read lmkfile nil nil)
 	 until (eq form nil)
 	 do (progn
