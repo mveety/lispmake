@@ -38,8 +38,9 @@ toplevel ~A and running ~A~%"
   (if *debugging*
       (format t "lispmake: debug: installing plugin ~A with toplevel ~A~%"
 	      name toplevel))
-  (if (equal (type-of toplevel) 'symbol)
-      (if (equal (type-of name) 'keyword)
+  (if (or (functionp toplevel)
+	  (symbolp toplevel))
+      (if (keywordp name)
 	  (setf *plugins* (append *plugins* (list (list name toplevel))))
 	  (lm-error "install-plugin" "arg name should by type keyword"))
       (lm-error "install-plugin" "arg toplevel should be type symbol")))

@@ -50,10 +50,10 @@
 	(format t "~%"))))
 
 (defun loadfile (outstream fname)
-  (format outstream "(load #P\"~A\")~%" (car fname)))
+  (format outstream "(load #P\"~A\")~%" fname))
 
 (defun quickloads (outstream library)
-  (format outstream "(ql:quickload '~A)~%" (car library)))
+  (format outstream "(ql:quickload '~A)~%" car library))
 
 (defun pl-package (args)
   (setf *lm-package* args))
@@ -62,19 +62,21 @@
   (setf *toplevel* args))
 
 (defun pl-file (args)
-  (if (listp args)
-      (dolist (x args)
-	(setf *sources* (append *sources* (list x))))
-      (setf *sources* (append *sources* (list args)))))
+  (if (stringp args)
+      (setf *sources* (append *sources* (list args)))
+      (if (listp args)
+	  (dolist (x args)
+	    (setf *sources* (append *sources* (list x)))))))
 
 (defun pl-output (args)
   (setf *outfile* args))
 
 (defun pl-quicklisp (args)
-  (if (listp args)
-      (dolist (x args)
-	(setf *quickloads* (append *quickloads* (list x))))
-      (setf *quickloads* (append *quickloads* (list args)))))
+  (if (symbolp args)
+      (setf *quickloads* (append *quickloads* (list args)))
+      (if (listp args)
+	  (dolist (x args)
+	    (setf *quickloads* (append *quickloads* (list x)))))))
 
 (defun generate ()
   (with-open-file (mkfile "build.lisp" :direction :output :if-exists :supersede)
@@ -94,7 +96,8 @@
 	(buildexe mkfile *outfile* *lm-package* *toplevel* *lisp-target*))
     (force-output mkfile)
     (run-plugin-postgen mkfile))
-  (format t "lispmake: doing build...~%")
+  (if *debugging*
+      (format t "lispmake: doing build...~%"))
   (if *do-build*
       (run-build-process)))
 
@@ -123,7 +126,7 @@
   (install-plugin :generate
 		  (lambda (args)
 		    (declare (ignore args))
-		    (setf *generate* (not *generate))))
+		    (setf *generate* (not *generate*))))
   (install-plugin :plugin 'pl-plugin)
   (install-plugin :eval
 		  (lambda (args)
@@ -138,7 +141,6 @@
 		    (declare (ignore args))
 		    (setf *do-build* (not *do-build*))))
   (install-pregen-hook 'pl-compile-file-pregen)
-  (install-postgen-hook 'run-build-process)
   (with-open-file (lmkfile "LMakefile")
     (loop for form = (read lmkfile nil nil)
 	 until (eq form nil)
