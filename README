@@ -7,6 +7,9 @@ if you don't have lispmake: lisp --load bootstrap.lisp
 
 REVISION 11 ADDITIONS:
 	 Ability to build with lispmake (no more running sbcl --load)
+	 Ton of cleanups
+	 Quicklisp integration works better
+	 File definitions work better
 
 REVISION 10 ADDITIONS:
 	 Added support for creating fasl files

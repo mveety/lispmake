@@ -53,7 +53,7 @@
   (format outstream "(load #P\"~A\")~%" fname))
 
 (defun quickloads (outstream library)
-  (format outstream "(ql:quickload '~A)~%" car library))
+  (format outstream "(ql:quickload '~A)~%" library))
 
 (defun pl-package (args)
   (setf *lm-package* args))
@@ -66,7 +66,7 @@
       (setf *sources* (append *sources* (list args)))
       (if (listp args)
 	  (dolist (x args)
-	    (setf *sources* (append *sources* (list x)))))))
+	    (setf *sources* (append *sources* x))))))
 
 (defun pl-output (args)
   (setf *outfile* args))
@@ -76,7 +76,7 @@
       (setf *quickloads* (append *quickloads* (list args)))
       (if (listp args)
 	  (dolist (x args)
-	    (setf *quickloads* (append *quickloads* (list x)))))))
+	    (setf *quickloads* (append *quickloads* x))))))
 
 (defun generate ()
   (with-open-file (mkfile "build.lisp" :direction :output :if-exists :supersede)
