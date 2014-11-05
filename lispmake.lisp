@@ -12,7 +12,7 @@
 ;;     * build targets (ala make) (could be a plugin)
 ;;     * testing. It works for me, it might not for you
 
-(defvar *debugging* T)
+(defvar *debugging* nil)
 (defvar *lispmake-version* 12)
 (defvar *sources* nil)
 (defvar *outfile* nil)

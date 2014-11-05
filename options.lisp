@@ -24,8 +24,6 @@
 
 (defun handle-options ()
   (setf *cmd-options* (unix-options:cli-options))
-  (format t "options: ~A~%" *cmd-options*)
-  (format t "real options: ~A~%" (unix-options:cli-options))
   (dolist (x *cmd-options*)
     (let* ((bf (split-equal x)))
       (if (not (equal bf nil))
@@ -53,13 +51,12 @@
       (setf *lmakefile* *lmfname*)
       (setf *lmakefile*
 	    (concatenate 'string *lmakefile* "." *target*)))
-  (format
-   t
-   "lmakefile=~A~%target=~A~%file=~A~%"
-   *lmakefile* *target* *lmfname*)
   (if *debugging*
-      (format
-       t
-       "lispmake: debug: handle-options: lmakefile=~A~%"
-       *lmakefile*))
+      (progn
+	(format
+	 t
+	 "lispmake: debug: handle-options: lmakefile=~A~%"
+	 *lmakefile*)
+	(format t "lmakefile=~A~%target=~A~%file=~A~%"
+		*lmakefile* *target* *lmfname*)))
   nil)
