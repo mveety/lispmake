@@ -12,7 +12,7 @@
 ;;     * build targets (ala make) (could be a plugin)
 ;;     * testing. It works for me, it might not for you
 
-(defvar *debugging* nil)
+(defvar *debugging* T)
 (defvar *lispmake-version* 12)
 (defvar *sources* nil)
 (defvar *outfile* nil)
@@ -119,6 +119,7 @@
   (if *debugging*
       (format t "lispmake r~A~%" *lispmake-version*)
       (disable-debugger))
+  (loop (print (eval (read))))
   (install-plugin :package 'pl-package)
   (install-plugin :toplevel 'pl-toplevel)
   (install-plugin :file 'pl-file)

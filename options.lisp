@@ -23,6 +23,7 @@
 	nil)))
 
 (defun handle-options ()
+  (format t "options: ~A~%" *cmd-options*)
   (dolist (x *cmd-options*)
     (let* ((bf (split-equal x)))
       (if (not (equal bf nil))
@@ -50,6 +51,10 @@
       (setf *lmakefile* *lmfname*)
       (setf *lmakefile*
 	    (concatenate 'string *lmakefile* "." *target*)))
+  (format
+   t
+   "lmakefile=~A~%target=~A~%file=~A~%"
+   *lmakefile* *target* *lmfname*)
   (if *debugging*
       (format
        t
