@@ -12,7 +12,7 @@
 ;;     * build targets (ala make) (could be a plugin)
 ;;     * testing. It works for me, it might not for you
 
-(defvar *cmd-options* (unix-options:cli-options))
+(defvar *cmd-options* nil)
 (defvar *lmfname* *lmakefile*)
 (defvar *target* nil)
 
@@ -23,7 +23,9 @@
 	nil)))
 
 (defun handle-options ()
+  (setf *cmd-options* (unix-options:cli-options))
   (format t "options: ~A~%" *cmd-options*)
+  (format t "real options: ~A~%" (unix-options:cli-options))
   (dolist (x *cmd-options*)
     (let* ((bf (split-equal x)))
       (if (not (equal bf nil))

@@ -119,7 +119,6 @@
   (if *debugging*
       (format t "lispmake r~A~%" *lispmake-version*)
       (disable-debugger))
-  (loop (print (eval (read))))
   (install-plugin :package 'pl-package)
   (install-plugin :toplevel 'pl-toplevel)
   (install-plugin :file 'pl-file)
