@@ -1,6 +1,7 @@
 (:package lispmake)
 (:toplevel main)
 (:quicklisp unix-options)
+(:quicklisp split-sequence)
 (:lisp all)
 (:build-with "/usr/local/bin/sbcl")
 (:do-build)

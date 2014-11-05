@@ -12,7 +12,6 @@
 ;;     * build targets (ala make) (could be a plugin)
 ;;     * testing. It works for me, it might not for you
 
-;(defvar *debugging* (not nil))  ;; enable or disable debugging output
 (defvar *debugging* nil)
 (defvar *lispmake-version* 12)
 (defvar *sources* nil)
@@ -116,6 +115,7 @@
 		  (funcall (cadr x) (cdr forms)))))))))
 
 (defun main ()
+  (handle-options)
   (if *debugging*
       (format t "lispmake r~A~%" *lispmake-version*)
       (disable-debugger))
@@ -142,7 +142,6 @@
 		    (declare (ignore args))
 		    (setf *do-build* (not *do-build*))))
   (install-pregen-hook 'pl-compile-file-pregen)
-  (handle-options)
   (with-open-file (lmkfile *lmakefile*)
     (loop for form = (read lmkfile nil nil)
 	 until (eq form nil)
