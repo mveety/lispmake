@@ -47,13 +47,6 @@
       (lm-error "pl-compile-file" "args length incorrect")
       (setf *compile-files* (append *compile-files* args))))
 
-#|
-(defun debug-ignore (c h)
-  (declare (ignore h))
-  (print c)
-  (sb-ext:quit))
-|#
-
 (defun disable-debugger ()
   #+sbcl (setf *debugger-hook* (lambda (c h)
 				 (declare (ignore h))
@@ -79,4 +72,9 @@
   (if (not (equal args nil))
       (setf *lisp-executable* (car args))
       (lm-error "pl-lisp-executable" "args must be a string")))
+
+(defun quit-lisp ()
+  #+sbcl (sb-ext:exit)
+  #+ccl (ccl:quit)
+  #-(or ccl sbcl) (abort "unable to exit cleanly in your lisp"))
 
