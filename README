@@ -22,7 +22,6 @@ REVISION 12 ADDITIONS:
 	 Ability to use files other than LMakefile
 	 Ability to have other make targets
 	 Now requires quicklisp (sorry!)
-	 Ability to run other executables (:exec ("cp" "lispmake" "/usr/local/bin/"))
 	 More Broken
 
 REVISION 11 ADDITIONS:
