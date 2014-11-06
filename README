@@ -10,11 +10,11 @@ Targets:
     exist it just crashes and has lisp handle it. Targets are just
     extensions to the default name. So if you want an install
     target you make a file called "LMakefile.install" and run
-    lispmake like "lispmake --target=install".
+    lispmake like "lispmake target=install".
 
 Other Files:
     Lispmake also handles using other files instead of the LMakefile.
-    if you invoke lispmake like "lispmake --file=[filename]" it
+    if you invoke lispmake like "lispmake file=[filename]" it
     allows you to use that to build. Targets still work with the
     normal convention of [filename].[target] .
 

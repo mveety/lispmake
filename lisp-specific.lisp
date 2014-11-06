@@ -72,3 +72,9 @@
   (if (not (equal args nil))
       (setf *lisp-executable* (car args))
       (lm-error "pl-lisp-executable" "args must be a string")))
+
+(defun quit-lisp ()
+  #+sbcl (sb-ext:exit)
+  #+ccl (ccl:quit)
+  #-(or ccl sbcl) (abort "unable to exit cleanly in your lisp"))
+
