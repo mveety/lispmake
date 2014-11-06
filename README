@@ -18,11 +18,20 @@ Other Files:
     allows you to use that to build. Targets still work with the
     normal convention of [filename].[target] .
 
+REVISION 13 ADDITIONS:
+	 Ability to run external applications (via :exec)
+	 Ability to delete files (via :delete)
+	 Ability to copy files to places (via :install)
+	 Ability to create directories (via :install)
+	 Ability to define variables that can be used with exec,delete,
+	     and install
+	 Less crashing
+
 REVISION 12 ADDITIONS:
 	 Ability to use files other than LMakefile
 	 Ability to have other make targets
 	 Now requires quicklisp (sorry!)
-	 Ability to run other executables (:exec ("cp" "lispmake" "/usr/local/bin/"))
+(oops no)Ability to run other executables (:exec ("cp" "lispmake" "/usr/local/bin/"))
 	 More Broken
 
 REVISION 11 ADDITIONS:
