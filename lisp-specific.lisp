@@ -15,7 +15,7 @@
 #+ccl (defvar *lisp-type* 'ccl)
 #+sbcl (defvar *lisp-type* 'sbcl)
 #+clisp (defvar *lisp-type* 'clisp)
-#-(or ccl sbcl clisp) (lm-error "lisps.lisp" "unable to support this lisp")
+#-(or ccl sbcl clisp) (lm-error "lisp-specific.lisp" "unable to support this lisp")
 
 (defun buildexe (outstream fname package toplevel &optional (lisp 'default))
   (if *debugging*
@@ -47,13 +47,6 @@
       (lm-error "pl-compile-file" "args length incorrect")
       (setf *compile-files* (append *compile-files* args))))
 
-#|
-(defun debug-ignore (c h)
-  (declare (ignore h))
-  (print c)
-  (sb-ext:quit))
-|#
-
 (defun disable-debugger ()
   #+sbcl (setf *debugger-hook* (lambda (c h)
 				 (declare (ignore h))
@@ -79,4 +72,3 @@
   (if (not (equal args nil))
       (setf *lisp-executable* (car args))
       (lm-error "pl-lisp-executable" "args must be a string")))
-
