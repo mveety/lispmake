@@ -78,3 +78,11 @@
   #+ccl (ccl:quit)
   #-(or ccl sbcl) (abort "unable to exit cleanly in your lisp"))
 
+(defun run-executable (exec-file &rest arguments)
+  #+sbcl (sb-ext:run-program
+	  exec-file
+	  arguments
+	  :output *standard-output*)
+  #-sbcl (format t
+		 "lispmake: warning: unable to run external executables~%"))
+
