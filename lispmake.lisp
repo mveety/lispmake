@@ -57,11 +57,11 @@
 
 (defun pl-package (args)
   (setf *lm-package* args)
-  (set-var package args))
+  (set-var 'package args))
 
 (defun pl-toplevel (args)
   (setf *toplevel* args)
-  (set-var toplevel args))
+  (set-var 'toplevel args))
 
 (defun pl-file (args)
   (if (stringp args)
@@ -72,7 +72,7 @@
 
 (defun pl-output (args)
   (setf *outfile* args)
-  (set-var outfile args))
+  (set-var 'outfile args))
 
 (defun pl-quicklisp (args)
   (if (symbolp args)
