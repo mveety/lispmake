@@ -49,3 +49,45 @@
       (let* ((s (string symbol)))
 	(intern (string-upcase s) "KEYWORD"))
       nil))
+
+(defun varhdl (form)
+  (if (symbolp form)
+      (let ((bf (getf *variables* form)))
+	(if (not (equal bf nil))
+	    bf
+	    form))
+      form))
+
+(defmacro nilp (form)
+  `(equal ,form nil))
+
+(defun pl-exec (args)
+  (if (listp args)
+      (let* ((cmd (car args))
+	     (cmd-args (cdr args)))
+	(oth-run-executable cmd cmd-args))))
+
+(defun pl-install (args)
+  (if (listp args)
+      (let* ((filename (varhdl (getf args :file)))
+	     (target (varhdl (getf args :to)))
+	     (mode (varhdl (getf args :mode)))
+	     (options (varhdl (getf args :options))))
+	(if (or (nilp filename)
+		(nilp target))
+	    (abort "filename or target equals nil"))
+	(if (cl-fad:directory-exists-p target)
+	    (cl-fad:copy-file
+	     filename
+	     (concatenate 'string
+			  target
+			  "/"
+			  filename)
+	     :overwrite t)
+	    (abort "target directory doesn't exist"))
+	(if (nilp mode)
+	    (osicat-posix:chmod (concatenate 'string target "/" filename) 555)
+	    (osicat-posix:chmod (concatenate 'string target "/" filename) mode)))
+      (abort "args should be type list")))
+
+
