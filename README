@@ -25,7 +25,7 @@ REVISION 13 ADDITIONS:
 	 Ability to create directories (via :install)
 	 Ability to define variables that can be used with exec,delete,
 	     and install (via :define)
-	 Ability to define new commands in Common Lisp (via :fn , :enable , and :fcall)
+	 Ability to define new commands in Common Lisp (via :fn)
 	 Less crashing
 
 REVISION 12 ADDITIONS:

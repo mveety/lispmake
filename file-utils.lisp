@@ -90,4 +90,16 @@
 	    (osicat-posix:chmod (concatenate 'string target "/" filename) mode)))
       (abort "args should be type list")))
 
+(defun pl-delete (args)
+  (if (stringp args)
+      (delete-file args)
+      (if (listp args)
+	  (dolist (x args)
+	    (if (stringp x) (delete-file x))))))
 
+(defun pl-define (args)
+  (if (and (listp args)
+	   (equal (length args) 2))
+      (let* ((varname (car args))
+	     (value (cadr args)))
+	(set-var varname value)))

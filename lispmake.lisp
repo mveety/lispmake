@@ -56,10 +56,12 @@
   (format outstream "(ql:quickload '~A)~%" library))
 
 (defun pl-package (args)
-  (setf *lm-package* args))
+  (setf *lm-package* args)
+  (set-var package args))
 
 (defun pl-toplevel (args)
-  (setf *toplevel* args))
+  (setf *toplevel* args)
+  (set-var toplevel args))
 
 (defun pl-file (args)
   (if (stringp args)
@@ -69,7 +71,8 @@
 	    (setf *sources* (append *sources* x))))))
 
 (defun pl-output (args)
-  (setf *outfile* args))
+  (setf *outfile* args)
+  (set-var outfile args))
 
 (defun pl-quicklisp (args)
   (if (symbolp args)
@@ -141,6 +144,10 @@
 		  (lambda (args)
 		    (declare (ignore args))
 		    (setf *do-build* (not *do-build*))))
+  (install-plugin :exec 'pl-exec)
+  (install-plugin :install 'pl-install)
+  (install-plugin :delete 'pl-delete)
+  (install-plugin :define 'pl-define)
   (install-pregen-hook 'pl-compile-file-pregen)
   (with-open-file (lmkfile *lmakefile*)
     (loop for form = (read lmkfile nil nil)
@@ -148,13 +155,5 @@
 	 do (progn
 	      (lm-debug "main" "reading form")
 	      (runner form)))
-  (if (or (equal *lm-package* nil)
-	  (equal *generate* nil)
-	  (equal *sources* nil)
-	  (equal *toplevel* nil)
-	  (equal *outfile* nil))
-      (lm-error "main" "you did not run a required operation")
-      (progn
-	(lm-debug "main" "generating build.lisp")
-	(generate)))))
-
+    (lm-debug "main" "generating build.lisp")
+    (generate)))
