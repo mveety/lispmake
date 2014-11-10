@@ -6,6 +6,7 @@
 (:do-build)
 (:file ("package.lisp" "lispmake.lisp"
 	"lisp-specific.lisp" "plugin.lisp"
-	"options.lisp"))
+	"options.lisp" "file-utils.lisp"))
 (:output "lispmake")
+(:define testvar "this is a test")
 (:generate)

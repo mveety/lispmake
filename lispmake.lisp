@@ -57,11 +57,11 @@
 
 (defun pl-package (args)
   (setf *lm-package* args)
-  (set-var 'package args))
+  (set-var 'package (car args)))
 
 (defun pl-toplevel (args)
   (setf *toplevel* args)
-  (set-var 'toplevel args))
+  (set-var 'toplevel (car args)))
 
 (defun pl-file (args)
   (if (stringp args)
@@ -72,7 +72,7 @@
 
 (defun pl-output (args)
   (setf *outfile* args)
-  (set-var 'outfile args))
+  (set-var 'outfile (car args)))
 
 (defun pl-quicklisp (args)
   (if (symbolp args)
@@ -156,4 +156,5 @@
 	      (lm-debug "main" "reading form")
 	      (runner form)))
     (lm-debug "main" "generating build.lisp")
-    (generate)))
+    (generate))
+  (if *debugging* (print *variables*)))

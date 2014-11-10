@@ -102,4 +102,4 @@
 	   (equal (length args) 2))
       (let* ((varname (car args))
 	     (value (cadr args)))
-	(set-var varname value)))
+	(set-var varname value))))
