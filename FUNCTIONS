@@ -1,0 +1,82 @@
+Lispmake functions
+
+(:exec (command args..))
+    command,args -- string
+    Execute an external executable.
+
+(:delete (files...))
+    files -- string
+    delete files referenced by string
+
+(:define (variable value))
+    variable -- symbol
+    value -- dynamic
+    create a variable and sets the value to value
+    if variable is created then set the value
+
+(:install (:file :to :mode :options))
+    keywords file,mode -- string
+    keyword mode -- number
+    keyword options -- list
+    Installs a file to a target. Works similar
+    to install(1) but not exactly.
+    :options currently does nothing
+
+(:fn (name forms...))
+    name -- keyword
+    forms -- forms
+    Defines a lispmake function in common lisp
+
+(:package arg)
+    arg -- symbol
+    Defines the package for the appliction
+
+(:toplevel arg)
+    arg -- symbol
+    Defines the toplevel function for the application
+
+(:quicklisp arg)
+(:quicklisp (args...))
+    arg -- symbol
+    Loads quicklisp systems required by the application
+
+(:lisp arg)
+    arg -- either all,ccl,sbcl,default
+    Define the lisp that will run build.lisp
+
+(:build-with arg)
+    arg -- string
+    Defines the compiler to run build.lisp
+
+(:do-build nil)
+    No Arguments
+    Enables running the compiler after generation
+    of build.lisp
+
+(:file arg)
+(:file (args...))
+    arg -- string
+    Source file or list of source files that are
+    needed by the application
+
+(:output arg)
+    arg -- string
+    Defines the file to put the compilers result
+
+(:generate nil)
+    No Arguments
+    enables build.lisp generation
+
+(:eval (forms...))
+    forms -- forms
+    Evaluates some lisp forms
+
+(:compile-file arg)
+    arg -- string
+    compiles lisp source file. outputs arg+.fasl
+
+Disabled function: (:plugin (args...))
+    arg -- bunch of settings
+    This installs a plugin file. It's disabled but available.
+    Most of the works for this are broken.
+
