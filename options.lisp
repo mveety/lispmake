@@ -109,3 +109,14 @@
 (defmacro nilp (form)
   `(equal ,form nil))
 
+(defun pl-fn (args)
+  (if (not (listp args))
+      (abort "fn args should by type list"))
+  (if (not (keywordp (car args)))
+      (abort "fn name needs to be type keyword"))
+  (install-fn-plugin (car args) (cdr args)))
+
+(defmacro install-fn-plugin (name list-of-forms)
+  `(install-plugin
+    ,name
+    (lambda (args) ,@list-of-forms)))
