@@ -26,6 +26,7 @@ REVISION 13 ADDITIONS:
 	 Ability to define variables that can be used with exec,delete,
 	     and install (via :define)
 	 Ability to define new commands in Common Lisp (via :fn)
+	 Ability to get use input (via :configure)
 	 Less crashing
 
 REVISION 12 ADDITIONS:
