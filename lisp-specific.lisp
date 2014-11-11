@@ -86,3 +86,10 @@
   #-sbcl (format t
 		 "lispmake: warning: unable to run external executables~%"))
 
+(defun oth-run-executable (execfile argument-list)
+  #+sbcl (sb-ext:run-program
+	  exec-file
+	  arguments
+	  :output *standard-output*)
+  #-sbcl (format t
+		 "lispmake: warning: unable to run external executables~%"))

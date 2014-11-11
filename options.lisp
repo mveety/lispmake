@@ -15,6 +15,11 @@
 (defvar *cmd-options* nil)
 (defvar *lmfname* *lmakefile*)
 (defvar *target* nil)
+(defparameter *variables* '(prefix "/usr/local"
+			    bindir "/usr/local/bin"
+			    libdir "/usr/local/lib"
+			    etcdir "/usr/local/etc"
+			    default-mode 555))
 
 (defun split-equal (string)
   (let* ((bf (split-sequence:split-sequence #\= string)))
@@ -60,3 +65,58 @@
 	(format t "lmakefile=~A~%target=~A~%file=~A~%"
 		*lmakefile* *target* *lmfname*)))
   nil)
+
+(defun get-var (varname)
+  (getf *variables* varname))
+
+(defun set-var (varname value)
+  (let* ((vstat (getf *variables* varname)))
+    (if (equal vstat nil)
+	(progn
+	  (pushnew value *variables*)
+	  (pushnew varname *variables*))
+	(setf (getf *variables* varname) value))))
+
+(defun parg (arg)
+  (if (symbolp arg)
+      (getf *variables* arg)
+      arg))
+
+(defun string-to-symbol (string)
+  (if (stringp string)
+      (intern (string-upcase string))
+      nil))
+
+(defun string-to-keyword (string)
+  (if (stringp string)
+      (intern (string-upcase string) "KEYWORD")
+      nil))
+
+(defun symbol-to-keyword (symbol)
+  (if (symbolp symbol)
+      (let* ((s (string symbol)))
+	(intern (string-upcase s) "KEYWORD"))
+      nil))
+
+(defun varhdl (form)
+  (if (symbolp form)
+      (let ((bf (getf *variables* form)))
+	(if (not (equal bf nil))
+	    bf
+	    form))
+      form))
+
+(defmacro nilp (form)
+  `(equal ,form nil))
+
+(defun pl-fn (args)
+  (if (not (listp args))
+      (abort "fn args should by type list"))
+  (if (not (keywordp (car args)))
+      (abort "fn name needs to be type keyword"))
+  (install-fn-plugin (car args) (cdr args)))
+
+(defmacro install-fn-plugin (name list-of-forms)
+  `(install-plugin
+    ,name
+    (lambda (args) ,@list-of-forms)))
