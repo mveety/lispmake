@@ -18,6 +18,12 @@ Other Files:
     allows you to use that to build. Targets still work with the
     normal convention of [filename].[target] .
 
+REVISION 14 ADDITIONS:
+	 BUG FIXES! <3
+	 Ability for user to define variables (via :configure)
+	 Ability to set variables for application being
+	 built (via :export)
+
 REVISION 13 ADDITIONS:
 	 Ability to run external applications (via :exec)
 	 Ability to delete files (via :delete)

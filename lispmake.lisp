@@ -13,7 +13,7 @@
 ;;     * testing. It works for me, it might not for you
 
 (defvar *debugging* nil)
-(defvar *lispmake-version* 13)
+(defvar *lispmake-version* 14)
 (defvar *sources* nil)
 (defvar *outfile* nil)
 (defvar *lm-package* nil)
@@ -148,6 +148,7 @@
   (install-plugin :install 'pl-install)
   (install-plugin :delete 'pl-delete)
   (install-plugin :define 'pl-define)
+  (install-plugin :configure 'pl-configure)
   (install-pregen-hook 'pl-compile-file-pregen)
   (with-open-file (lmkfile *lmakefile*)
     (loop for form = (read lmkfile nil nil)

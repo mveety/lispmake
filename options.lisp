@@ -120,3 +120,66 @@
   `(install-plugin
     ,name
     (lambda (args) ,@list-of-forms)))
+
+(defun configure-string (varname)
+  (tagbody
+   start
+     (format t "lispmake: configure: Input value for (string) ~A: " varname)
+     (force-output)
+     (let* ((bf nil))
+       (setf bf (read))
+       (if (not (stringp bf))
+	   (progn
+	     (format t "lispmake: configure: error: invalid type~%")
+	     (force-output)
+	     (go start)))
+       (set-var varname bf))))
+
+(defun configure-boolean (varname)
+  (tagbody
+   start
+     (format t "lispmake: configure: Enable option (y/n)~A" varname)
+     (force-output)
+     (let* ((bf nil))
+       (setf bf (read))
+       (setf bf (string-upcase bf))
+       (if (or
+	    (equal bf "Y")
+	    (equal bf "YES")
+	    (equal bf "TRUE"))
+	   (set-var varname (not nil))
+	   (if (or
+		(equal bf "N")
+		(equal bf "NO")
+		(equal bf "FALSE"))
+	       (set-var varname nil)
+	       (progn
+		 (format t "lispmake: configure: error: invalid input~%")
+		 (force-output)
+		 (go start)))))))
+
+(defun configure-number (varname)
+  (tagbody
+   start
+     (format t "lispmake: configure: Input value for (number)~A: " varname)
+     (force-output)
+     (let* ((bf nil))
+       (setf bf (read))
+       (if (not (numberp bf))
+	   (progn
+	     (format t "lispmake: configure: error: invalid input~%")
+	     (force-output)
+	     (go start)))
+       (set-var varname bf))))
+
+(defun pl-configure (args)
+  (dolist (x args)
+    (if (not (listp x))
+	(abort "must be a list of lists"))
+    (let* ((type (cadr x))
+	   (name (car x)))
+      (cond
+	((equal type :string) (configure-string name))
+	((equal type :boolean) (configure-boolean name))
+	((equal type :number) (configure-number name))))))
+
