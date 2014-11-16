@@ -131,7 +131,6 @@
 		  (lambda (args)
 		    (declare (ignore args))
 		    (setf *generate* (not *generate*))))
-;  (install-plugin :plugin 'pl-plugin)
   (install-plugin :eval
 		  (lambda (args)
 		    (eval args)))
