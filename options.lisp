@@ -51,7 +51,8 @@
 		    (equal value "Y")
 		    (equal value "1"))
 		   (setf *debugging* T)
-		   (setf *debugging* nil))))))))
+		   (setf *debugging* nil)))
+	      (T (set-var (string-to-symbol var) value)))))))
   (if (equal *target* nil)
       (setf *lmakefile* *lmfname*)
       (setf *lmakefile*

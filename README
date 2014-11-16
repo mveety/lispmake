@@ -23,6 +23,7 @@ REVISION 14 ADDITIONS:
 	 Ability for user to define variables (via :configure)
 	 Ability to set variables for application being
 	 built (via :export)
+	 Ability to define variables via command line
 
 REVISION 13 ADDITIONS:
 	 Ability to run external applications (via :exec)
