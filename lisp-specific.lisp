@@ -65,7 +65,10 @@
 						       "--load"
 						       "build.lisp")
 				   :output *standard-output*)
-        #-sbcl (format t 
+	#+ccl (ccl:run-program *lisp-executable*
+			       '("--load" "build.lisp")
+			       :output *standard-output*)
+        #-(or sbcl ccl) (format t 
 		"lispmake: warning: building not supported in this lisp~%"))))
 
 (defun pl-lisp-executable (args)
