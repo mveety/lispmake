@@ -29,26 +29,6 @@
 (defvar *postgen-hooks* nil)
 (defvar *lmakefile* "LMakefile")
 
-(defun lm-error (function explain)
-  (format t "lispmake: error: ~A: ~A~%" function explain)
-  (abort "lm-error"))
-
-(defun lm-warning (function explain)
-  (format t "lispmake: warning: ~A: ~A~%" function explain)
-  nil)
-
-(defun lm-debug (function explain)
-  (if *debugging*
-      (format t "lispmake: debug: ~A: ~A~%" function explain))
-  nil)
-
-(defmacro lm-advdebug (function fmt &rest forms)
-  (if *debugging*
-      (progn
-	(format t "lispmake: debug: ~A: " function)
-	`(format t ,fmt ,@forms)
-	(format t "~%"))))
-
 (defun generate ()
   (with-open-file (mkfile "build.lisp" :direction :output :if-exists :supersede)
     (format 
