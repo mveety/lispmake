@@ -49,38 +49,6 @@
 	`(format t ,fmt ,@forms)
 	(format t "~%"))))
 
-(defun loadfile (outstream fname)
-  (format outstream "(load #P\"~A\")~%" fname))
-
-(defun quickloads (outstream library)
-  (format outstream "(ql:quickload '~A)~%" library))
-
-(defun pl-package (args)
-  (setf *lm-package* args)
-  (set-var 'package (car args)))
-
-(defun pl-toplevel (args)
-  (setf *toplevel* args)
-  (set-var 'toplevel (car args)))
-
-(defun pl-file (args)
-  (if (stringp args)
-      (setf *sources* (append *sources* (list args)))
-      (if (listp args)
-	  (dolist (x args)
-	    (setf *sources* (append *sources* x))))))
-
-(defun pl-output (args)
-  (setf *outfile* args)
-  (set-var 'outfile (car args)))
-
-(defun pl-quicklisp (args)
-  (if (symbolp args)
-      (setf *quickloads* (append *quickloads* (list args)))
-      (if (listp args)
-	  (dolist (x args)
-	    (setf *quickloads* (append *quickloads* x))))))
-
 (defun generate ()
   (with-open-file (mkfile "build.lisp" :direction :output :if-exists :supersede)
     (format 
