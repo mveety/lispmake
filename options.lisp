@@ -14,7 +14,6 @@
 
 (defvar *cmd-options* nil)
 (defvar *lmfname* *lmakefile*)
-(defvar *target* nil)
 (defparameter *variables* '(prefix "/usr/local"
 			    bindir "/usr/local/bin"
 			    libdir "/usr/local/lib"

@@ -60,13 +60,13 @@
 
 (defun run-build-process ()
   (if (not (equal *lisp-executable* nil))
-      (progn
-        #+sbcl (sb-ext:run-program *lisp-executable* '("--noinform"
-						       "--load"
-						       "build.lisp")
+      (let ((fname (output-fname)))
+        #+sbcl (sb-ext:run-program *lisp-executable* (list "--noinform"
+							   "--load"
+							   fname)
 				   :output *standard-output*)
 	#+ccl (ccl:run-program *lisp-executable*
-			       '("--load" "build.lisp")
+			       (list "--load" fname)
 			       :output *standard-output*)
         #-(or sbcl ccl) (format t 
 		"lispmake: warning: building not supported in this lisp~%"))))

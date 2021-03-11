@@ -3,5 +3,6 @@
 .DS_Store
 *.fasl
 build.lisp
+run-*.lisp
 lispmake
 

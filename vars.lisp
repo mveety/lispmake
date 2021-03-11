@@ -16,4 +16,9 @@
 (defvar *pregen-hooks* nil)
 (defvar *postgen-hooks* nil)
 (defvar *lmakefile* "LMakefile")
+(defvar *target* nil)
 
+(defun output-fname ()
+  (if (eq *target* nil)
+      "run-build.lisp"
+      (format nil "run-~A.lisp" *target*)))
