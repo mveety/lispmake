@@ -18,7 +18,9 @@
 			    bindir "/usr/local/bin"
 			    libdir "/usr/local/lib"
 			    etcdir "/usr/local/etc"
-			    default-mode 555))
+			    default-mode (:user-read :user-exec :user-write
+					   :group-read :group-exec
+					   :other-read :other-exec)))
 
 (defun split-equal (string)
   (let* ((bf (split-sequence:split-sequence #\= string)))

@@ -52,9 +52,10 @@
 (defun disable-debugger ()
   #+sbcl (setf *debugger-hook* (lambda (c h)
 				 (declare (ignore h))
-				 (format t 
-                                  "lispmake: crash: please report the below~%")
+				 (format t "lispmake: crash: please report the below~%")
 				 (print c)
+				 (terpri)
+				 (terpri)
 				 (sb-ext:exit)))
   #-sbcl (format t 
     "lispmake: warning: lispmake does not support debugger handling in this lisp~%")
@@ -77,11 +78,6 @@
   (if (not (equal args nil))
       (setf *lisp-executable* (car args))
       (lm-error "pl-lisp-executable" "args must be a string")))
-
-(defun quit-lisp ()
-  #+sbcl (sb-ext:exit)
-  #+ccl (ccl:quit)
-  #-(or ccl sbcl) (lm-abort "unable to exit cleanly in your lisp"))
 
 (defun run-executable (exec-file &rest arguments)
   #+sbcl (sb-ext:run-program

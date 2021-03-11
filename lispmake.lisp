@@ -84,6 +84,7 @@
   (install-plugin :install 'pl-install)
   (install-plugin :delete 'pl-delete)
   (install-plugin :define 'pl-define)
+  (install-plugin :require-file 'pl-require-file)
   (install-plugin :configure 'pl-configure)
   (install-pregen-hook 'pl-compile-file-pregen)
   (with-open-file (lmkfile *lmakefile*)

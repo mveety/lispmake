@@ -12,13 +12,22 @@
 ;;     * build targets (ala make) (could be a plugin)
 ;;     * testing. It works for me, it might not for you
 
+(defun quit-lisp ()
+  #+sbcl (sb-ext:exit)
+  #+ccl (ccl:quit)
+  #-(or ccl sbcl) (lm-abort "unable to exit cleanly in your lisp"))
+
 (defun lm-error (function explain)
   (format t "lispmake: error: ~A: ~A~%" function explain)
-  (abort))
+  (if *debugging*
+      (abort)
+      (quit-lisp)))
 
 (defun lm-abort (explain)
   (format t "lispmake: abort: ~A~%" explain)
-  (abort))
+  (if *debugging*
+      (abort)
+      (quit-lisp)))
 
 (defun lm-warning (function explain)
   (format t "lispmake: warning: ~A: ~A~%" function explain)

@@ -23,31 +23,49 @@
       (let* ((filename (varhdl (getf args :file)))
 	     (target (varhdl (getf args :to)))
 	     (mode (varhdl (getf args :mode)))
+	     destpath
+	     cleantgt
 	     ; (options (varhdl (getf args :options)))
 	     )
-	(if (or (nilp filename)
-		(nilp target))
-	    (lm-abort "filename or target equals nil"))
-	(if (cl-fad:directory-exists-p target)
-	    (cl-fad:copy-file
-	     filename
-	     (concatenate 'string
-			  target
-			  "/"
-			  filename)
-	     :overwrite t)
-	    (lm-abort "target directory doesn't exist"))
+	(if (nilp filename)
+	    (lm-abort "filename equals nil"))
+	(if (nilp target)
+	    (setf target (get-var 'bindir)))
 	(if (nilp mode)
-	    (osicat-posix:chmod (concatenate 'string target "/" filename) 555)
-	    (osicat-posix:chmod (concatenate 'string target "/" filename) mode)))
+	    (setf mode (get-var 'default-mode)))
+	(setf cleantgt (subseq target 1))
+	(setf destpath (cl-fad:canonical-pathname
+			(make-pathname :directory (list :absolute cleantgt) :name filename)))
+	(if (cl-fad:directory-exists-p target)
+	    (progn
+	      (format t ":install ~A -> ~A (~A)~%"
+		      filename
+		      destpath
+		      mode)
+	      (cl-fad:copy-file
+	       filename
+	       (concatenate 'string
+			    target
+			    "/"
+			    filename)
+	       :overwrite t)
+	      (setf (osicat:file-permissions destpath) mode))
+	    (lm-abort "target directory doesn't exist")))
       (lm-abort "args should be type list")))
+
+(defun lm-delete-file (fname)
+  (if (probe-file fname)
+      (progn
+	(format t ":delete ~A~%" fname)
+	(delete-file fname))))
 
 (defun pl-delete (args)
   (if (stringp args)
-      (delete-file args)
+      (lm-delete-file args)
       (if (listp args)
 	  (dolist (x args)
-	    (if (stringp x) (delete-file x))))))
+	    (if (stringp x)
+		(lm-delete-file x))))))
 
 (defun pl-define (args)
   (if (and (listp args)
@@ -55,3 +73,7 @@
       (let* ((varname (car args))
 	     (value (cadr args)))
 	(set-var varname value))))
+
+(defun pl-require-file (args)
+  (if (not (cl-fad:file-exists-p (car args)))
+      (lm-error "require-file" (format nil "~A is missing" (car args)))))
