@@ -12,23 +12,6 @@
 ;;     * build targets (ala make) (could be a plugin)
 ;;     * testing. It works for me, it might not for you
 
-(defvar *debugging* nil)
-(defvar *lispmake-version* 14)
-(defvar *sources* nil)
-(defvar *outfile* nil)
-(defvar *lm-package* nil)
-(defvar *toplevel* nil)
-(defvar *quickloads* nil)
-(defvar *generate* nil)
-(defvar *compile-files* nil)
-(defvar *lisp-executable* nil)
-(defvar *do-build* nil)
-(defvar *lisp-target* 'default)
-(defvar *plugins* nil)
-(defvar *pregen-hooks* nil)
-(defvar *postgen-hooks* nil)
-(defvar *lmakefile* "LMakefile")
-
 (defun generate ()
   (with-open-file (mkfile "build.lisp" :direction :output :if-exists :supersede)
     (format 

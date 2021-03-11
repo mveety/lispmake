@@ -79,7 +79,7 @@
 (defun quit-lisp ()
   #+sbcl (sb-ext:exit)
   #+ccl (ccl:quit)
-  #-(or ccl sbcl) (abort "unable to exit cleanly in your lisp"))
+  #-(or ccl sbcl) (lm-abort "unable to exit cleanly in your lisp"))
 
 (defun run-executable (exec-file &rest arguments)
   #+sbcl (sb-ext:run-program
@@ -89,10 +89,10 @@
   #-sbcl (format t
 		 "lispmake: warning: unable to run external executables~%"))
 
-(defun oth-run-executable (execfile argument-list)
+(defun oth-run-executable (exec-file arguments-list)
   #+sbcl (sb-ext:run-program
 	  exec-file
-	  arguments
+	  arguments-list
 	  :output *standard-output*)
   #-sbcl (format t
 		 "lispmake: warning: unable to run external executables~%"))

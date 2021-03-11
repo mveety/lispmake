@@ -23,10 +23,11 @@
       (let* ((filename (varhdl (getf args :file)))
 	     (target (varhdl (getf args :to)))
 	     (mode (varhdl (getf args :mode)))
-	     (options (varhdl (getf args :options))))
+	     ; (options (varhdl (getf args :options)))
+	     )
 	(if (or (nilp filename)
 		(nilp target))
-	    (abort "filename or target equals nil"))
+	    (lm-abort "filename or target equals nil"))
 	(if (cl-fad:directory-exists-p target)
 	    (cl-fad:copy-file
 	     filename
@@ -35,11 +36,11 @@
 			  "/"
 			  filename)
 	     :overwrite t)
-	    (abort "target directory doesn't exist"))
+	    (lm-abort "target directory doesn't exist"))
 	(if (nilp mode)
 	    (osicat-posix:chmod (concatenate 'string target "/" filename) 555)
 	    (osicat-posix:chmod (concatenate 'string target "/" filename) mode)))
-      (abort "args should be type list")))
+      (lm-abort "args should be type list")))
 
 (defun pl-delete (args)
   (if (stringp args)

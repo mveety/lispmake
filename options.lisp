@@ -27,6 +27,38 @@
 	bf
 	nil)))
 
+(defun parg (arg)
+  (if (symbolp arg)
+      (getf *variables* arg)
+      arg))
+
+(defun string-to-symbol (string)
+  (if (stringp string)
+      (intern (string-upcase string))
+      nil))
+
+(defun string-to-keyword (string)
+  (if (stringp string)
+      (intern (string-upcase string) "KEYWORD")
+      nil))
+
+(defun symbol-to-keyword (symbol)
+  (if (symbolp symbol)
+      (let* ((s (string symbol)))
+	(intern (string-upcase s) "KEYWORD"))
+      nil))
+
+(defun get-var (varname)
+  (getf *variables* varname))
+
+(defun set-var (varname value)
+  (let* ((vstat (getf *variables* varname)))
+    (if (equal vstat nil)
+	(progn
+	  (pushnew value *variables*)
+	  (pushnew varname *variables*))
+	(setf (getf *variables* varname) value))))
+
 (defun handle-options ()
   (setf *cmd-options* (unix-options:cli-options))
   (dolist (x *cmd-options*)
@@ -67,38 +99,6 @@
 		*lmakefile* *target* *lmfname*)))
   nil)
 
-(defun get-var (varname)
-  (getf *variables* varname))
-
-(defun set-var (varname value)
-  (let* ((vstat (getf *variables* varname)))
-    (if (equal vstat nil)
-	(progn
-	  (pushnew value *variables*)
-	  (pushnew varname *variables*))
-	(setf (getf *variables* varname) value))))
-
-(defun parg (arg)
-  (if (symbolp arg)
-      (getf *variables* arg)
-      arg))
-
-(defun string-to-symbol (string)
-  (if (stringp string)
-      (intern (string-upcase string))
-      nil))
-
-(defun string-to-keyword (string)
-  (if (stringp string)
-      (intern (string-upcase string) "KEYWORD")
-      nil))
-
-(defun symbol-to-keyword (symbol)
-  (if (symbolp symbol)
-      (let* ((s (string symbol)))
-	(intern (string-upcase s) "KEYWORD"))
-      nil))
-
 (defun varhdl (form)
   (if (symbolp form)
       (let ((bf (getf *variables* form)))
@@ -112,15 +112,10 @@
 
 (defun pl-fn (args)
   (if (not (listp args))
-      (abort "fn args should by type list"))
+      (lm-abort "fn args should by type list"))
   (if (not (keywordp (car args)))
-      (abort "fn name needs to be type keyword"))
+      (lm-abort "fn name needs to be type keyword"))
   (install-fn-plugin (car args) (cdr args)))
-
-(defmacro install-fn-plugin (name list-of-forms)
-  `(install-plugin
-    ,name
-    (lambda (args) ,@list-of-forms)))
 
 (defun configure-string (varname)
   (tagbody
@@ -176,7 +171,7 @@
 (defun pl-configure (args)
   (dolist (x args)
     (if (not (listp x))
-	(abort "must be a list of lists"))
+	(lm-abort "must be a list of lists"))
     (let* ((type (cadr x))
 	   (name (car x)))
       (cond

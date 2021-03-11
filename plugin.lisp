@@ -45,6 +45,11 @@ toplevel ~A and running ~A~%"
 	  (lm-error "install-plugin" "arg name should by type keyword"))
       (lm-error "install-plugin" "arg toplevel should be type symbol")))
 
+(defmacro install-fn-plugin (name &body list-of-forms)
+  `(install-plugin
+    ,name
+    (lambda (args) ,@list-of-forms)))
+
 (defun run-plugin-pregen (x)
   (lm-debug "run-plugin-pregen" "running pregeneration hooks")
   (let ((*standard-output* x))

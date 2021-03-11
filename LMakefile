@@ -4,10 +4,15 @@
 (:lisp all)
 (:build-with "/usr/local/bin/sbcl")
 (:do-build)
-(:file ("package.lisp" "core.lisp"
-	"debug.lisp" "lispmake.lisp"
-	"lisp-specific.lisp" "plugin.lisp"
-	"options.lisp" "file-utils.lisp"))
+(:file ("package.lisp"
+	"vars.lisp"
+	"debug.lisp"
+	"lisp-specific.lisp"
+	"plugin.lisp"
+	"options.lisp"
+	"core.lisp"
+	"file-utils.lisp"
+	"lispmake.lisp"))
 (:output "lispmake")
 (:define testvar "this is a test")
 (:generate)

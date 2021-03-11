@@ -14,7 +14,11 @@
 
 (defun lm-error (function explain)
   (format t "lispmake: error: ~A: ~A~%" function explain)
-  (abort "lm-error"))
+  (abort))
+
+(defun lm-abort (explain)
+  (format t "lispmake: abort: ~A~%" explain)
+  (abort))
 
 (defun lm-warning (function explain)
   (format t "lispmake: warning: ~A: ~A~%" function explain)
