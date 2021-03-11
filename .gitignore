@@ -1,5 +1,7 @@
 *~
 *.*~
+*.*.swp
+*.*.*.swp
 .DS_Store
 *.fasl
 build.lisp
