@@ -26,15 +26,17 @@
       (lm-debug "buildexe" "generating output"))
   (if *debugging*
       (format t "lispmake: debug: lisp=~A~%" lisp))
-  (format outstream
-   "#+sbcl (sb-ext:save-lisp-and-die \"~A\" :executable t :toplevel #'~A:~A)~%"
-	  (car fname) (car package) (car toplevel))
-  (format outstream
-   "#+ccl (ccl:save-application ~A :toplevel-function #'~A:~A :prepend-kernel t)~%"
-	  (car fname) (car package) (car toplevel))
-  (format outstream
-   "#+clisp (ext:saveinitmem ~A :init-function #'~A:~A :executable t :norc t)~%"
-	  (car fname) (car package) (car toplevel)))
+  (if (and package toplevel)
+      (progn
+	(format outstream
+		"#+sbcl (sb-ext:save-lisp-and-die \"~A\" :executable t :toplevel #'~A:~A)~%"
+		(car fname) (car package) (car toplevel))
+	(format outstream
+		"#+ccl (ccl:save-application ~A :toplevel-function #'~A:~A :prepend-kernel t)~%"
+		(car fname) (car package) (car toplevel))
+	(format outstream
+		"#+clisp (ext:saveinitmem ~A :init-function #'~A:~A :executable t :norc t)~%"
+		(car fname) (car package) (car toplevel)))))
 
 (defun pl-compile-file-pregen ()
   (if (not (equal *compile-files* nil))

@@ -26,8 +26,7 @@
       (lm-debug "generate" "generating load forms")
       (loadfile mkfile x))
     (lm-debug "generate" "generating save-and-die form")
-    (if *generate*
-	(buildexe mkfile *outfile* *lm-package* *toplevel* *lisp-target*))
+    (buildexe mkfile *outfile* *lm-package* *toplevel* *lisp-target*)
     (force-output mkfile)
     (run-plugin-postgen mkfile))
   (if *debugging*
@@ -48,7 +47,11 @@
 		  (lm-debug "runner" "running plugin")
 		  (funcall (cadr x) (cdr forms)))))))))
 
+(defun fix-and-eval (args)
+  (eval (append '(progn) args)))
+
 (defun main ()
+  (in-package :lispmake)
   (handle-options)
   (if *debugging*
       (format t "lispmake r~A~%" *lispmake-version*)
@@ -64,7 +67,10 @@
 		    (setf *generate* (not *generate*))))
   (install-plugin :eval
 		  (lambda (args)
-		    (eval args)))
+		    (fix-and-eval args)))
+  (install-plugin :echo
+		  (lambda (args)
+		    (format t "~A~%" args)))
   (install-plugin :lisp
 		  (lambda (args)
 		    (setf *lisp-target* (car args))))
@@ -86,6 +92,9 @@
 	 do (progn
 	      (lm-debug "main" "reading form")
 	      (runner form)))
-    (lm-debug "main" (format nil "generating run-~A.lisp~%" (output-fname)))
-    (generate))
-  (if *debugging* (print *variables*)))
+    (if *generate*
+	(progn
+	  (lm-debug "main" (format nil "generating run-~A.lisp~%" (output-fname)))
+	  (generate))))
+  (if *debugging* (print *variables*))
+  (format t "~%"))
