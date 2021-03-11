@@ -6,17 +6,17 @@ if you have lispmake rev 11 or higher: lispmake
 if you don't have lispmake: lisp --load bootstrap.lisp
 
 Targets:
-    By default lispmake looks for the file "LMakefile". If it doesn't
-    exist it just crashes and has lisp handle it. Targets are just
-    extensions to the default name. So if you want an install
-    target you make a file called "LMakefile.install" and run
-    lispmake like "lispmake install".
+	By default lispmake looks for the file "LMakefile". If it doesn't
+	exist it just crashes and has lisp handle it. Targets are just
+	extensions to the default name. So if you want an install
+	target you make a file called "LMakefile.install" and run
+	lispmake like "lispmake install".
 
 Other Files:
-    Lispmake also handles using other files instead of the LMakefile.
-    if you invoke lispmake like "lispmake file=[filename]" it
-    allows you to use that to build. Targets still work with the
-    normal convention of [filename].[target] .
+	Lispmake also handles using other files instead of the LMakefile.
+	if you invoke lispmake like "lispmake file=[filename]" it
+	allows you to use that to build. Targets still work with the
+	normal convention of [filename].[target] .
 
 REVISION 14 NOTES:
 	This version will likely require bootstrapping if coming from a
@@ -27,18 +27,18 @@ REVISION 14 NOTES:
 	and I'm sorry for the inconvenience.
 
 REVISION 14 CHANGES:
-	 BUG FIXES! <3
-	 Ability for user to define variables (via :configure)
-	 Ability to define variables via command line
-	 Ability to check for required file (via :require-file)
-	 :install works correctly now.
-	 Ability to print output to stdout (via :echo)
-	 Ability to execute lisp code inside of lispmake (via :eval)
-	 Ability to override the build time lisp implementation
-	 	(via command line variable lisp=)
-	 :delete works correctly now and prints out each operation.
-	 Output files are named based on the target their generated from
-	 Command line arguments are considered targets unless they're assignments
-	 Files are only generated if :generate is evaluated.
-	 Executable output forms are only generated if package and toplevel are set.
+	BUG FIXES! <3
+	Ability for user to define variables (via :configure)
+	Ability to define variables via command line
+	Ability to check for required file (via :require-file)
+	:install works correctly now.
+	Ability to print output to stdout (via :echo)
+	Ability to execute lisp code inside of lispmake (via :eval)
+	Ability to override the build time lisp implementation
+		(via command line variable lisp=)
+	:delete works correctly now and prints out each operation.
+	Output files are named based on the target their generated from
+	Command line arguments are considered targets unless they're assignments
+	Files are only generated if :generate is evaluated.
+	Executable output forms are only generated if package and toplevel are set.
 
