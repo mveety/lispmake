@@ -38,7 +38,11 @@ REVISION 14 CHANGES:
 		(via command line variable lisp=)
 	:delete works correctly now and prints out each operation.
 	Output files are named based on the target their generated from
-	Command line arguments are considered targets unless they're assignments
+	Command line arguments are considered targets unless they're
+		assignments
 	Files are only generated if :generate is evaluated.
-	Executable output forms are only generated if package and toplevel are set.
+	Executable output forms are only generated if package and toplevel
+		are set.
+	Added dobuild= command line variable. This overrides the makefile's
+	default.
 

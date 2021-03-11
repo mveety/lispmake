@@ -11,6 +11,7 @@
 (defvar *compile-files* nil)
 (defvar *lisp-executable* nil)
 (defvar *do-build* nil)
+(defvar *do-build-override* nil)
 (defvar *lisp-target* 'default)
 (defvar *plugins* nil)
 (defvar *pregen-hooks* nil)

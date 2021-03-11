@@ -79,7 +79,8 @@
   (install-plugin :do-build
 		  (lambda (args)
 		    (declare (ignore args))
-		    (setf *do-build* (not *do-build*))))
+		    (if (not *do-build-override*)
+			(setf *do-build* (not *do-build*)))))
   (install-plugin :exec 'pl-exec)
   (install-plugin :install 'pl-install)
   (install-plugin :delete 'pl-delete)
