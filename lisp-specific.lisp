@@ -76,7 +76,8 @@
 
 (defun pl-lisp-executable (args)
   (if (not (equal args nil))
-      (setf *lisp-executable* (car args))
+      (if (equal *lisp-executable* nil)
+	  (setf *lisp-executable* (car args)))
       (lm-error "pl-lisp-executable" "args must be a string")))
 
 (defun run-executable (exec-file &rest arguments)

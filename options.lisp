@@ -70,6 +70,8 @@
 	    (cond
 	      ((equal var "target")
 	       (setf *target* value))
+	      ((equal var "lisp")
+	       (setf *lisp-executable* value))
 	      ((equal var "file")
 	       (setf *lmfname* value))
 	      ((equal var "debug")
