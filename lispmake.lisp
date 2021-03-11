@@ -38,14 +38,12 @@
   (if (not (listp forms))
       (lm-error "runner" "form not of type cons in LMakefile")
       (progn
-	(let ((cmd (car forms))
-	      (plug nil))
-	  (dolist (x *plugins*)
-	    (setf plug (car x))
-	    (if (equal cmd plug)
-		(progn
-		  (lm-debug "runner" "running plugin")
-		  (funcall (cadr x) (cdr forms)))))))))
+	(let* ((cmd (car forms))
+	       (args (cdr forms))
+	       (pfun (getf *plugins* cmd)))
+	  (if (nilp pfun)
+	      (lm-error "runner" (format nil "unknown command: ~A" cmd))
+	      (funcall pfun args))))))
 
 (defun fix-and-eval (args)
   (eval (append '(progn) args)))

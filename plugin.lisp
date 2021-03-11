@@ -41,7 +41,7 @@ toplevel ~A and running ~A~%"
   (if (or (functionp toplevel)
 	  (symbolp toplevel))
       (if (keywordp name)
-	  (setf *plugins* (append *plugins* (list (list name toplevel))))
+	  (setf *plugins* (append *plugins* (list name toplevel)))
 	  (lm-error "install-plugin" "arg name should by type keyword"))
       (lm-error "install-plugin" "arg toplevel should be type symbol")))
 
