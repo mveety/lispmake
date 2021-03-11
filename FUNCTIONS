@@ -1,31 +1,25 @@
 Lispmake functions
 
-(:exec (command args..))
+(:exec command args..)
     command,args -- string
     Execute an external executable.
 
+(:delete file)
 (:delete (files...))
-    files -- string
-    delete files referenced by string
+    file/files -- string
+    delete files referenced by string(s)
 
-(:define (variable value))
+(:define variable value)
     variable -- symbol
-    value -- dynamic
+    value -- data
     create a variable and sets the value to value
     if variable is created then set the value
 
-(:install (:file :to :mode :options))
-    keywords file,mode -- string
-    keyword mode -- number
-    keyword options -- list
+(:install :file :to :mode)
+    keywords file -- string
+    keyword mode -- list of keywords. see vars.lisp for an example
     Installs a file to a target. Works similar
     to install(1) but not exactly.
-    :options currently does nothing
-
-(:fn (name forms...))
-    name -- keyword
-    forms -- forms
-    Defines a lispmake function in common lisp
 
 (:package arg)
     arg -- symbol
@@ -75,8 +69,14 @@ Lispmake functions
     arg -- string
     compiles lisp source file. outputs arg+.fasl
 
-Disabled function: (:plugin (args...))
-    arg -- bunch of settings
-    This installs a plugin file. It's disabled but available.
-    Most of the works for this are broken.
+(:require-file file)
+	file -- string
+	Check to see if a file exists
+
+(:eval forms...)
+	forms -- lisp forms
+	evaluate lisp forms.
+
+(:echo string)
+	output string to stdout
 
