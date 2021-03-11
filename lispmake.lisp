@@ -41,6 +41,7 @@
 	(let* ((cmd (car forms))
 	       (args (cdr forms))
 	       (pfun (getf *plugins* cmd)))
+	  (lm-debug "runner" (format nil "cmd = ~A, args = ~A~%" cmd args))
 	  (if (nilp pfun)
 	      (lm-error "runner" (format nil "unknown command: ~A" cmd))
 	      (funcall pfun args))))))
@@ -48,9 +49,18 @@
 (defun fix-and-eval (args)
   (eval (append '(progn) args)))
 
+(defun pl-echo (args)
+  (if (not (listp args))
+      (lm-error "echo" "invalid arguments")
+      (progn
+	(dolist (x args)
+	  (format t "~A" (varhdl x)))
+	(terpri))))
+
 (defun main ()
   (in-package :lispmake)
   (handle-options)
+  (initialize-vars)
   (if *debugging*
       (format t "lispmake r~A~%" *lispmake-version*)
       (disable-debugger))
@@ -66,9 +76,7 @@
   (install-plugin :eval
 		  (lambda (args)
 		    (fix-and-eval args)))
-  (install-plugin :echo
-		  (lambda (args)
-		    (format t "~A~%" args)))
+  (install-plugin :echo 'pl-echo)
   (install-plugin :lisp
 		  (lambda (args)
 		    (setf *lisp-target* (car args))))
@@ -85,6 +93,7 @@
   (install-plugin :define 'pl-define)
   (install-plugin :require-file 'pl-require-file)
   (install-plugin :configure 'pl-configure)
+  (install-plugin :apply-prefix 'pl-apply-prefix)
   (install-pregen-hook 'pl-compile-file-pregen)
   (with-open-file (lmkfile *lmakefile*)
     (loop for form = (read lmkfile nil nil)
@@ -96,5 +105,6 @@
 	(progn
 	  (lm-debug "main" (format nil "generating run-~A.lisp~%" (output-fname)))
 	  (generate))))
-  (if *debugging* (print *variables*))
-  (format t "~%"))
+  (if *debugging* (progn
+		    (print *variables*)
+		    (terpri))))

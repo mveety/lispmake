@@ -5,7 +5,6 @@ Lispmake functions
     Execute an external executable.
 
 (:delete file)
-(:delete (files...))
     file/files -- string
     delete files referenced by string(s)
 
@@ -29,9 +28,8 @@ Lispmake functions
     arg -- symbol
     Defines the toplevel function for the application
 
-(:quicklisp arg)
-(:quicklisp (args...))
-    arg -- symbol
+(:quicklisp args...)
+    args -- symbols
     Loads quicklisp systems required by the application
 
 (:lisp arg)
@@ -47,9 +45,8 @@ Lispmake functions
     Enables running the compiler after generation
     of build.lisp
 
-(:file arg)
-(:file (args...))
-    arg -- string
+(:file args...)
+    args -- strings
     Source file or list of source files that are
     needed by the application
 
@@ -61,8 +58,8 @@ Lispmake functions
     No Arguments
     enables build.lisp generation
 
-(:eval (forms...))
-    forms -- forms
+(:eval forms...)
+    forms -- lisp forms
     Evaluates some lisp forms
 
 (:compile-file arg)

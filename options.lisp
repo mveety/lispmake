@@ -15,9 +15,9 @@
 (defvar *cmd-options* nil)
 (defvar *lmfname* *lmakefile*)
 (defparameter *variables* '(prefix "/usr/local"
-			    bindir "/usr/local/bin"
-			    libdir "/usr/local/lib"
-			    etcdir "/usr/local/etc"
+			    bindir ""
+			    libdir ""
+			    etcdir ""
 			    default-mode (:user-read :user-exec :user-write
 					   :group-read :group-exec
 					   :other-read :other-exec)))
@@ -192,3 +192,25 @@
 	((equal type :boolean) (configure-boolean name))
 	((equal type :number) (configure-number name))))))
 
+(defun initialize-vars ()
+  (let* ((prefix (get-var 'prefix))
+	 (prefix-changed nil)
+	 bindir libdir etcdir)
+    ;; remove trailing slash from prefix if it exists
+    (if (equal (subseq prefix (1- (length prefix))) "/")
+	(setf prefix (subseq prefix 0 (1- (length prefix)))
+	      prefix-changed t))
+    (setf bindir (concatenate 'string prefix "/bin")
+	  libdir (concatenate 'string prefix "/lib")
+	  etcdir (concatenate 'string prefix "/etc"))
+    (if prefix-changed
+	(set-var 'prefix prefix))
+    (if (equal (get-var 'bindir) "")
+	(set-var 'bindir bindir))
+    (if (equal (get-var 'libdir) "")
+	(set-var 'libdir libdir))
+    (if (equal (get-var 'etcdir) "")
+	(set-var 'etcdir etcdir))))
+
+(defun pl-apply-prefix ()
+  (initialize-vars))

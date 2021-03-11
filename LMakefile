@@ -1,10 +1,10 @@
 (:package lispmake)
 (:toplevel main)
-(:quicklisp (unix-options split-sequence osicat cl-fad))
+(:quicklisp unix-options split-sequence osicat cl-fad)
 (:lisp all)
 (:build-with "/usr/local/bin/sbcl")
 (:do-build)
-(:file ("package.lisp"
+(:file "package.lisp"
 	"vars.lisp"
 	"debug.lisp"
 	"lisp-specific.lisp"
@@ -12,7 +12,7 @@
 	"options.lisp"
 	"core.lisp"
 	"file-utils.lisp"
-	"lispmake.lisp"))
+	"lispmake.lisp")
 (:output "lispmake")
 (:define testvar "this is a test")
 (:generate)
