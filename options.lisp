@@ -61,6 +61,11 @@
 	  (pushnew varname *variables*))
 	(setf (getf *variables* varname) value))))
 
+(defun var-defined-p (varname)
+  (if (find varname *variables*)
+      t
+      nil))
+
 (defmacro true-mess (value)
   ;; this is still a shitshow, but a bit more contained.
   `(or (equal ,value "true")

@@ -67,6 +67,20 @@
 		  (runner form)))
 	(lm-error "include" (format nil "file not found: ~A~%" fname)))))
 
+(defun pl-block (args)
+  (dolist (x args)
+    (lm-debug "block" (format nil "reading form ~A~%" x))
+    (runner x)))
+
+(defun pl-if-defined (args)
+  (if (var-defined-p (car args))
+      (if (not (nilp (cadr args)))
+	  (progn
+            (lm-debug "if-defined" (format nil "reading form ~A" (cadr args)))
+	    (runner (cadr args)))
+	  (lm-error "if-defined" "invalid arguments"))
+      (lm-debug "if-defined" (format nil "var ~A is not defined" (car args)))))
+
 (defun main ()
   (in-package :lispmake)
   (handle-options)
@@ -104,7 +118,9 @@
   (install-plugin :require-file 'pl-require-file)
   (install-plugin :configure 'pl-configure)
   (install-plugin :include 'pl-include)
+  (install-plugin :block 'pl-block)
   (install-plugin :apply-prefix 'pl-apply-prefix)
+  (install-plugin :if-defined 'pl-if-defined)
   (install-pregen-hook 'pl-compile-file-pregen)
   (with-open-file (lmkfile *lmakefile*)
     (loop for form = (read lmkfile nil nil)
