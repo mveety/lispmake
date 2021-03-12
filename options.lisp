@@ -104,7 +104,9 @@
 		   (setf *debugging* nil)))
 	      (T (set-var (string-to-symbol var) value))))
 	  ;;; if the arg doesn't have an = sign, then assume it's a target
-	  (setf *target* x))))
+	  (progn
+	    (set-var 'target x)
+	    (setf *target* x)))))
   (if (equal *target* nil)
       (setf *lmakefile* *lmfname*)
       (setf *lmakefile*
