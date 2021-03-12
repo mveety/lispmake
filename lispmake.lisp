@@ -57,6 +57,16 @@
 	  (format t "~A" (varhdl x)))
 	(terpri))))
 
+(defun pl-include (args)
+  (let ((fname (car args)))
+    (if (probe-file fname)
+	(with-open-file (incfile fname)
+	  (loop for form = (read incfile nil nil)
+		until (eq form nil) do
+		  (lm-debug "include" (format nil "reading form: ~A~%" form))
+		  (runner form)))
+	(lm-error "include" (format nil "file not found: ~A~%" fname)))))
+
 (defun main ()
   (in-package :lispmake)
   (handle-options)
@@ -93,13 +103,14 @@
   (install-plugin :define 'pl-define)
   (install-plugin :require-file 'pl-require-file)
   (install-plugin :configure 'pl-configure)
+  (install-plugin :include 'pl-include)
   (install-plugin :apply-prefix 'pl-apply-prefix)
   (install-pregen-hook 'pl-compile-file-pregen)
   (with-open-file (lmkfile *lmakefile*)
     (loop for form = (read lmkfile nil nil)
 	 until (eq form nil)
 	 do (progn
-	      (lm-debug "main" "reading form")
+	      (lm-debug "main" (format nil "reading form ~A~%" form))
 	      (runner form)))
     (if *generate*
 	(progn

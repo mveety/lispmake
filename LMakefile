@@ -14,5 +14,4 @@
 	"file-utils.lisp"
 	"lispmake.lisp")
 (:output "lispmake")
-(:define testvar "this is a test")
 (:generate)

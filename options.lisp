@@ -18,6 +18,7 @@
 			    bindir ""
 			    libdir ""
 			    etcdir ""
+			    target ""
 			    default-mode (:user-read :user-exec :user-write
 					   :group-read :group-exec
 					   :other-read :other-exec)))
@@ -81,7 +82,8 @@
 		 (value (cadr bf)))
 	    (cond
 	      ((equal var "target")
-	       (setf *target* value))
+	       (setf *target* value)
+	       (set-var 'target *target*))
 	      ((equal var "lisp")
 	       (setf *lisp-executable* value))
 	      ((equal var "file")
@@ -210,7 +212,9 @@
     (if (equal (get-var 'libdir) "")
 	(set-var 'libdir libdir))
     (if (equal (get-var 'etcdir) "")
-	(set-var 'etcdir etcdir))))
+	(set-var 'etcdir etcdir))
+    (if (equal (get-var 'target) "")
+	(set-var 'target "build"))))
 
 (defun pl-apply-prefix ()
   (initialize-vars))
