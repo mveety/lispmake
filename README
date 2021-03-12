@@ -45,4 +45,10 @@ REVISION 14 CHANGES:
 		are set.
 	Added dobuild= command line variable. This overrides the makefile's
 	default.
+	Added internal variable target. Hold what the currently executing
+		target is named.
+	Added ability to include other files (via :include)
+	Added ability to pass blocks of code as arguments (via :block)
+	Added ability to conditionally execute code if a variable exists
+		(via :if-defined)
 

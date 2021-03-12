@@ -77,3 +77,16 @@ Lispmake functions
 (:echo string)
 	output string to stdout
 
+(:include file)
+	file -- string
+	Load an execute external lispmake file.
+
+(:block lmake-forms...)
+	lmake-forms -- valid lispmake forms
+	encapsulate and execute the forms in the arguments
+
+(:if-defined varname form)
+	varname -- variable
+	form -- valid lispmake form
+	execute lispmake form is a variable is defined
+
