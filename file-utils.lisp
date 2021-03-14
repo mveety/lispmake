@@ -46,7 +46,7 @@
 	(perms nil))
     (dolist (x rperms)
       (if (not (< (- x unixread) 0))
-	  (setf perms (append perms 
+	  (setf perms (append perms
 			      (case state
 				(0 (list :user-read))
 				(1 (list :group-read))
