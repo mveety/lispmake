@@ -20,8 +20,9 @@
 			    etcdir ""
 			    target ""
 			    default-mode (:user-read :user-exec :user-write
-					   :group-read :group-exec
-					   :other-read :other-exec)))
+					  :group-read :group-exec
+					  :other-read :other-exec)))
+(defparameter *varhdlrs* nil)
 
 (defun split-equal (string)
   (let* ((bf (split-sequence:split-sequence #\= string)))
@@ -50,6 +51,56 @@
 	(intern (string-upcase s) "KEYWORD"))
       nil))
 
+(defun perms-to-number (perms-list)
+  (let ((user 0)
+	(group 0)
+	(other 0))
+    (dolist (x perms-list)
+      (cond
+	((equal x :user-read) (incf user 4))
+	((equal x :user-write) (incf user 2))
+	((equal x :user-exec) (incf user 1))
+	((equal x :group-read) (incf group 4))
+	((equal x :group-write) (incf group 2))
+	((equal x :group-exec) (incf group 1))
+	((equal x :other-read) (incf other 4))
+	((equal x :other-write) (incf other 2))
+	((equal x :other-exec) (incf other 1))))
+    (format nil "~A~A~A" user group other)))
+
+(defun number-to-perms (perms-str)
+  (let ((rperms (list (parse-integer (subseq perms-str 0 1) :radix 8)
+		      (parse-integer (subseq perms-str 1 2) :radix 8)
+		      (parse-integer (subseq perms-str 2 3) :radix 8)))
+	(state 0)
+	(unixread 4)
+	(unixwrite 2)
+	(unixexec 1)
+	(perms nil))
+    (dolist (x rperms)
+      (if (not (< (- x unixread) 0))
+	  (setf perms (append perms
+			      (case state
+				(0 (list :user-read))
+				(1 (list :group-read))
+				(2 (list :other-read))))
+		x (- x unixread)))
+      (if (not (< (- x unixwrite) 0))
+	  (setf perms (append perms
+			      (case state
+				(0 (list :user-write))
+				(1 (list :group-write))
+				(2 (list :other-write))))
+		x (- x unixwrite)))
+      (if (equal x unixexec)
+	  (setf perms (append perms
+			      (case state
+				(0 (list :user-exec))
+				(1 (list :group-exec))
+				(2 (list :other-exec))))))
+      (incf state))
+    perms))
+
 (defun get-var (varname)
   (getf *variables* varname))
 
@@ -59,7 +110,13 @@
 	(progn
 	  (pushnew value *variables*)
 	  (pushnew varname *variables*))
-	(setf (getf *variables* varname) value))))
+	(progn
+	  (if (getf *varhdlrs* varname)
+	      (funcall (getf *varhdlrs* varname) value)
+	      (setf (getf *variables* varname) value))))))
+
+(defun set-var-handler (varname handler)
+  (setf (getf *varhdlrs* varname) handler))
 
 (defun var-defined-p (varname)
   (if (find varname *variables*)
@@ -201,6 +258,19 @@
 	((equal type :boolean) (configure-boolean name))
 	((equal type :number) (configure-number name))))))
 
+(defun set-default-mode (value)
+  (cond
+    ((typep value 'cons)
+     (setf (getf *variables* 'default-mode) value))
+    ((or (typep value 'string)
+	 (typep value 'number))
+     (let ((tmpperm nil))
+       (if (typep value 'number)
+	   (setf tmpperm (format nil "~A" value))
+	   (setf tmpperm value))
+       (setf (getf *variables* 'default-mode) (number-to-perms tmpperm))))
+    (t (lm-error "handler: default-mode" "invalid type"))))
+
 (defun initialize-vars ()
   (let* ((prefix (get-var 'prefix))
 	 (prefix-changed nil)
@@ -221,7 +291,8 @@
     (if (equal (get-var 'etcdir) "")
 	(set-var 'etcdir etcdir))
     (if (equal (get-var 'target) "")
-	(set-var 'target "build"))))
+	(set-var 'target "build")))
+  (set-var-handler 'default-mode #'set-default-mode))
 
 (defun pl-apply-prefix ()
   (initialize-vars))

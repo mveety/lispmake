@@ -1,2 +1,2 @@
 (:require-file "lispmake")
-(:install :file "lispmake" :to bindir :mode default-mode)
+(:install :file "lispmake" :to bindir :mode "755")
