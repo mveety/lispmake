@@ -14,14 +14,17 @@
 
 (defvar *cmd-options* nil)
 (defvar *lmfname* *lmakefile*)
-(defparameter *variables* '(prefix "/usr/local"
-			    bindir ""
-			    libdir ""
-			    etcdir ""
-			    target ""
-			    default-mode (:user-read :user-exec :user-write
-					  :group-read :group-exec
-					  :other-read :other-exec)))
+(defparameter *variables*
+  (list 'prefix "/usr/local"
+		'bindir ""
+		'libdir ""
+		'etcdir ""
+		'target ""
+		'cwd ""
+		'default-mode '(:user-read :user-exec :user-write
+						:group-read :group-exec
+						:other-read :other-exec)))
+
 (defparameter *varhdlrs* nil)
 
 (defun split-equal (string)
@@ -140,26 +143,26 @@
   (dolist (x *cmd-options*)
     (let* ((bf (split-equal x)))
       (if (not (equal bf nil))
-	  (let* ((var (car bf))
-		 (value (cadr bf)))
-	    (cond
-	      ((equal var "target")
-	       (setf *target* value)
-	       (set-var 'target *target*))
-	      ((equal var "lisp")
-	       (setf *lisp-executable* value))
-	      ((equal var "file")
-	       (setf *lmfname* value))
-	      ((equal var "dobuild")
-	       (setf *do-build-override* t)
-	       (if (true-mess value)
-		   (setf *do-build* T)
-		   (setf *do-build* nil)))
-	      ((equal var "debug")
-	       (if (true-mess value)
-		   (setf *debugging* T)
-		   (setf *debugging* nil)))
-	      (T (set-var (string-to-symbol var) value))))
+		  (let* ((var (car bf))
+				 (value (cadr bf)))
+			(cond
+			  ((equal var "target")
+			   (setf *target* value)
+			   (set-var 'target *target*))
+			  ((equal var "lisp")
+			   (setf *lisp-executable* value))
+			  ((equal var "file")
+			   (setf *lmfname* value))
+			  ((equal var "dobuild")
+			   (setf *do-build-override* t)
+			   (if (true-mess value)
+				   (setf *do-build* T)
+				   (setf *do-build* nil)))
+			  ((equal var "debug")
+			   (if (true-mess value)
+				   (setf *debugging* T)
+				   (setf *debugging* nil)))
+			  (T (set-var (string-to-symbol var) value))))
 	  ;;; if the arg doesn't have an = sign, then assume it's a target
 	  (progn
 	    (set-var 'target x)
@@ -167,23 +170,23 @@
   (if (equal *target* nil)
       (setf *lmakefile* *lmfname*)
       (setf *lmakefile*
-	    (concatenate 'string *lmakefile* "." *target*)))
+			(concatenate 'string *lmakefile* "." *target*)))
   (if *debugging*
       (progn
-	(format
-	 t
-	 "lispmake: debug: handle-options: lmakefile=~A~%"
-	 *lmakefile*)
-	(format t "lmakefile=~A~%target=~A~%file=~A~%"
-		*lmakefile* *target* *lmfname*)))
+		(format
+		 t
+		 "lispmake: debug: handle-options: lmakefile=~A~%"
+		 *lmakefile*)
+		(format t "lmakefile=~A~%target=~A~%file=~A~%"
+				*lmakefile* *target* *lmfname*)))
   nil)
 
 (defun varhdl (form)
   (if (symbolp form)
       (let ((bf (getf *variables* form)))
-	(if (not (equal bf nil))
-	    bf
-	    form))
+		(if (not (equal bf nil))
+			bf
+			form))
       form))
 
 (defmacro nilp (form)
@@ -263,35 +266,39 @@
     ((typep value 'cons)
      (setf (getf *variables* 'default-mode) value))
     ((or (typep value 'string)
-	 (typep value 'number))
+		 (typep value 'number))
      (let ((tmpperm nil))
        (if (typep value 'number)
-	   (setf tmpperm (format nil "~A" value))
-	   (setf tmpperm value))
+		   (setf tmpperm (format nil "~A" value))
+		   (setf tmpperm value))
        (setf (getf *variables* 'default-mode) (number-to-perms tmpperm))))
     (t (lm-error "handler: default-mode" "invalid type"))))
 
 (defun initialize-vars ()
   (let* ((prefix (get-var 'prefix))
-	 (prefix-changed nil)
-	 bindir libdir etcdir)
+		 (prefix-changed nil)
+		 (cwdstr (format nil "~A" (osicat:current-directory)))
+		 bindir libdir etcdir)
     ;; remove trailing slash from prefix if it exists
     (if (equal (subseq prefix (1- (length prefix))) "/")
-	(setf prefix (subseq prefix 0 (1- (length prefix)))
-	      prefix-changed t))
+		(setf prefix (subseq prefix 0 (1- (length prefix)))
+			  prefix-changed t))
+	(if (equal (subseq cwdstr (1- (length cwdstr))) "/")
+		(setf cwdstr (subseq cwdstr 0 (1- (length cwdstr)))))
     (setf bindir (concatenate 'string prefix "/bin")
-	  libdir (concatenate 'string prefix "/lib")
-	  etcdir (concatenate 'string prefix "/etc"))
+		  libdir (concatenate 'string prefix "/lib")
+		  etcdir (concatenate 'string prefix "/etc"))
     (if prefix-changed
-	(set-var 'prefix prefix))
+		(set-var 'prefix prefix))
     (if (equal (get-var 'bindir) "")
-	(set-var 'bindir bindir))
+		(set-var 'bindir bindir))
     (if (equal (get-var 'libdir) "")
-	(set-var 'libdir libdir))
+		(set-var 'libdir libdir))
     (if (equal (get-var 'etcdir) "")
-	(set-var 'etcdir etcdir))
+		(set-var 'etcdir etcdir))
     (if (equal (get-var 'target) "")
-	(set-var 'target "build")))
+		(set-var 'target "build"))
+	(set-var 'cwd cwdstr))
   (set-var-handler 'default-mode #'set-default-mode))
 
 (defun pl-apply-prefix ()

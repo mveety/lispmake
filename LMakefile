@@ -12,6 +12,7 @@
 	"options.lisp"
 	"core.lisp"
 	"file-utils.lisp"
+	"asdf.lisp"
 	"lispmake.lisp")
 (:output "lispmake")
 (:generate)

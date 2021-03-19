@@ -25,10 +25,11 @@
     (dolist (x *sources*)
       (lm-debug "generate" "generating load forms")
       (loadfile mkfile x))
+	(lm-debug "generate" "running plugin postgens")
+	(run-plugin-postgen mkfile)
     (lm-debug "generate" "generating save-and-die form")
     (buildexe mkfile *outfile* *lm-package* *toplevel* *lisp-target*)
-    (force-output mkfile)
-    (run-plugin-postgen mkfile))
+    (force-output mkfile))
   (if *debugging*
       (format t "lispmake: doing build...~%"))
   (if *do-build*
@@ -85,6 +86,7 @@
   (in-package :lispmake)
   (handle-options)
   (initialize-vars)
+  (initialize-asdf-vars)
   (if *debugging*
       (format t "lispmake r~A~%" *lispmake-version*)
       (disable-debugger))
@@ -110,7 +112,7 @@
 		  (lambda (args)
 		    (declare (ignore args))
 		    (if (not *do-build-override*)
-			(setf *do-build* (not *do-build*)))))
+				(setf *do-build* (not *do-build*)))))
   (install-plugin :exec 'pl-exec)
   (install-plugin :install 'pl-install)
   (install-plugin :delete 'pl-delete)
@@ -121,17 +123,22 @@
   (install-plugin :block 'pl-block)
   (install-plugin :apply-prefix 'pl-apply-prefix)
   (install-plugin :if-defined 'pl-if-defined)
+  (install-plugin :asdf-add-registry 'pl-asdf-add-registry)
+  (install-plugin :asdf-load-system 'pl-asdf-load-system)
   (install-pregen-hook 'pl-compile-file-pregen)
+  (install-pregen-hook 'pl-asdf-pregen)
+  (install-postgen-hook 'pl-asdf-postgen)
   (with-open-file (lmkfile *lmakefile*)
     (loop for form = (read lmkfile nil nil)
-	 until (eq form nil)
-	 do (progn
-	      (lm-debug "main" (format nil "reading form ~A~%" form))
-	      (runner form)))
+		  until (eq form nil)
+		  do (progn
+			   (lm-debug "main" (format nil "reading form ~A~%" form))
+			   (runner form)))
     (if *generate*
-	(progn
-	  (lm-debug "main" (format nil "generating run-~A.lisp~%" (output-fname)))
-	  (generate))))
-  (if *debugging* (progn
-		    (print *variables*)
-		    (terpri))))
+		(progn
+		  (lm-debug "main" (format nil "generating run-~A.lisp~%" (output-fname)))
+		  (generate))))
+  (if *debugging*
+	  (progn
+		(print *variables*)
+		(terpri))))
