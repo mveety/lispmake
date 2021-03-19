@@ -17,32 +17,32 @@
   (setf init-toplevel (car init-toplevel))
   (lm-debug "load-plugin" "loading a plugin")
   (format t "debug: toplevel=~A init-toplevel=~A~%"
-	  (type-of toplevel) (type-of init-toplevel))
+		  (type-of toplevel) (type-of init-toplevel))
   (format t "debug: toplevel=~A init-toplevel=~A~%"
-	  toplevel init-toplevel)
+		  toplevel init-toplevel)
   (if *debugging*
       (format t 
-	      "lispmake: debug: installing plugin ~A from file ~A with 
+			  "lispmake: debug: installing plugin ~A from file ~A with 
 toplevel ~A and running ~A~%" 
-	      name file toplevel init-toplevel))
+			  name file toplevel init-toplevel))
   (if (equal (type-of name) 'keyword)
       (progn
-	(load file)
-	(setf *plugins* (append *plugins* (list (list name toplevel))))
-	(lm-debug "load-plugin" "running toplevel function")
-	(funcall init-toplevel))
+		(load file)
+		(setf *plugins* (append *plugins* (list (list name toplevel))))
+		(lm-debug "load-plugin" "running toplevel function")
+		(funcall init-toplevel))
       (lm-error "load-plugin" "arg name should be type keyword")))
 
 (defun install-plugin (name toplevel)
   (lm-debug "install-plugin" "installing a plugin")
   (if *debugging*
       (format t "lispmake: debug: installing plugin ~A with toplevel ~A~%"
-	      name toplevel))
+			  name toplevel))
   (if (or (functionp toplevel)
-	  (symbolp toplevel))
+		  (symbolp toplevel))
       (if (keywordp name)
-	  (setf *plugins* (append *plugins* (list name toplevel)))
-	  (lm-error "install-plugin" "arg name should by type keyword"))
+		  (setf *plugins* (append *plugins* (list name toplevel)))
+		  (lm-error "install-plugin" "arg name should by type keyword"))
       (lm-error "install-plugin" "arg toplevel should be type symbol")))
 
 (defmacro install-fn-plugin (name &body list-of-forms)
@@ -54,17 +54,17 @@ toplevel ~A and running ~A~%"
   (lm-debug "run-plugin-pregen" "running pregeneration hooks")
   (let ((*standard-output* x))
     (if (not (equal *pregen-hooks* nil))
-	(dolist (y *pregen-hooks*)
-	  (funcall y))
-	nil)))
+		(dolist (y *pregen-hooks*)
+		  (funcall y))
+		nil)))
 
 (defun run-plugin-postgen (x)
   (lm-debug "run-plugin-pregen" "running postgeneration hooks")
   (let ((*standard-output* x))
     (if (not (equal *postgen-hooks* nil))
-	(dolist (y *postgen-hooks*)
-	  (funcall y))
-	nil)))
+		(dolist (y *postgen-hooks*)
+		  (funcall y))
+		nil)))
 
 (defun install-pregen-hook (fname)
   (lm-debug "install-pregen-hook" "adding pregeneration hook")

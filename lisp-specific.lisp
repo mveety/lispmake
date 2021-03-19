@@ -28,20 +28,20 @@
       (format t "lispmake: debug: lisp=~A~%" lisp))
   (if (and package toplevel)
       (progn
-	(format outstream
-		"#+sbcl (sb-ext:save-lisp-and-die \"~A\" :executable t :toplevel #'~A:~A)~%"
-		(car fname) (car package) (car toplevel))
-	(format outstream
-		"#+ccl (ccl:save-application ~A :toplevel-function #'~A:~A :prepend-kernel t)~%"
-		(car fname) (car package) (car toplevel))
-	(format outstream
-		"#+clisp (ext:saveinitmem ~A :init-function #'~A:~A :executable t :norc t)~%"
-		(car fname) (car package) (car toplevel)))))
+		(format outstream
+				"#+sbcl (sb-ext:save-lisp-and-die \"~A\" :executable t :toplevel #'~A:~A)~%"
+				(car fname) (car package) (car toplevel))
+		(format outstream
+				"#+ccl (ccl:save-application ~A :toplevel-function #'~A:~A :prepend-kernel t)~%"
+				(car fname) (car package) (car toplevel))
+		(format outstream
+				"#+clisp (ext:saveinitmem ~A :init-function #'~A:~A :executable t :norc t)~%"
+				(car fname) (car package) (car toplevel)))))
 
 (defun pl-compile-file-pregen ()
   (if (not (equal *compile-files* nil))
       (dolist (x *compile-files*)
-	(format t "(compile-file \"~A\" :output-file \"~A\" :verbose t)~%" x
+		(format t "(compile-file \"~A\" :output-file \"~A\" :verbose t)~%" x
                 (concatenate 'string x ".fasl")))))
 
 (defun pl-compile-file (args)
@@ -51,47 +51,47 @@
 
 (defun disable-debugger ()
   #+sbcl (setf *debugger-hook* (lambda (c h)
-				 (declare (ignore h))
-				 (format t "lispmake: crash: please report the below~%")
-				 (print c)
-				 (terpri)
-				 (terpri)
-				 (sb-ext:exit)))
+								 (declare (ignore h))
+								 (format t "lispmake: crash: please report the below~%")
+								 (print c)
+								 (terpri)
+								 (terpri)
+								 (sb-ext:exit)))
   #-sbcl (format t 
-    "lispmake: warning: lispmake does not support debugger handling in this lisp~%")
+				 "lispmake: warning: lispmake does not support debugger handling in this lisp~%")
   nil)
 
 (defun run-build-process ()
   (if (not (equal *lisp-executable* nil))
       (let ((fname (output-fname)))
         #+sbcl (sb-ext:run-program *lisp-executable* (list "--noinform"
-							   "--load"
-							   fname)
-				   :output *standard-output*)
-	#+ccl (ccl:run-program *lisp-executable*
-			       (list "--load" fname)
-			       :output *standard-output*)
+														   "--load"
+														   fname)
+								   :output *standard-output*)
+		#+ccl (ccl:run-program *lisp-executable*
+							   (list "--load" fname)
+							   :output *standard-output*)
         #-(or sbcl ccl) (format t 
-		"lispmake: warning: building not supported in this lisp~%"))))
+								"lispmake: warning: building not supported in this lisp~%"))))
 
 (defun pl-lisp-executable (args)
   (if (not (equal args nil))
       (if (equal *lisp-executable* nil)
-	  (setf *lisp-executable* (car args)))
+		  (setf *lisp-executable* (car args)))
       (lm-error "pl-lisp-executable" "args must be a string")))
 
 (defun run-executable (exec-file &rest arguments)
   #+sbcl (sb-ext:run-program
-	  exec-file
-	  arguments
-	  :output *standard-output*)
+		  exec-file
+		  arguments
+		  :output *standard-output*)
   #-sbcl (format t
-		 "lispmake: warning: unable to run external executables~%"))
+				 "lispmake: warning: unable to run external executables~%"))
 
 (defun oth-run-executable (exec-file arguments-list)
   #+sbcl (sb-ext:run-program
-	  exec-file
-	  arguments-list
-	  :output *standard-output*)
+		  exec-file
+		  arguments-list
+		  :output *standard-output*)
   #-sbcl (format t
-		 "lispmake: warning: unable to run external executables~%"))
+				 "lispmake: warning: unable to run external executables~%"))

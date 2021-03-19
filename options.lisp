@@ -30,8 +30,8 @@
 (defun split-equal (string)
   (let* ((bf (split-sequence:split-sequence #\= string)))
     (if (equal (length bf) 2)
-	bf
-	nil)))
+		bf
+		nil)))
 
 (defun parg (arg)
   (if (symbolp arg)
@@ -51,56 +51,56 @@
 (defun symbol-to-keyword (symbol)
   (if (symbolp symbol)
       (let* ((s (string symbol)))
-	(intern (string-upcase s) "KEYWORD"))
+		(intern (string-upcase s) "KEYWORD"))
       nil))
 
 (defun perms-to-number (perms-list)
   (let ((user 0)
-	(group 0)
-	(other 0))
+		(group 0)
+		(other 0))
     (dolist (x perms-list)
       (cond
-	((equal x :user-read) (incf user 4))
-	((equal x :user-write) (incf user 2))
-	((equal x :user-exec) (incf user 1))
-	((equal x :group-read) (incf group 4))
-	((equal x :group-write) (incf group 2))
-	((equal x :group-exec) (incf group 1))
-	((equal x :other-read) (incf other 4))
-	((equal x :other-write) (incf other 2))
-	((equal x :other-exec) (incf other 1))))
+		((equal x :user-read) (incf user 4))
+		((equal x :user-write) (incf user 2))
+		((equal x :user-exec) (incf user 1))
+		((equal x :group-read) (incf group 4))
+		((equal x :group-write) (incf group 2))
+		((equal x :group-exec) (incf group 1))
+		((equal x :other-read) (incf other 4))
+		((equal x :other-write) (incf other 2))
+		((equal x :other-exec) (incf other 1))))
     (format nil "~A~A~A" user group other)))
 
 (defun number-to-perms (perms-str)
   (let ((rperms (list (parse-integer (subseq perms-str 0 1) :radix 8)
-		      (parse-integer (subseq perms-str 1 2) :radix 8)
-		      (parse-integer (subseq perms-str 2 3) :radix 8)))
-	(state 0)
-	(unixread 4)
-	(unixwrite 2)
-	(unixexec 1)
-	(perms nil))
+					  (parse-integer (subseq perms-str 1 2) :radix 8)
+					  (parse-integer (subseq perms-str 2 3) :radix 8)))
+		(state 0)
+		(unixread 4)
+		(unixwrite 2)
+		(unixexec 1)
+		(perms nil))
     (dolist (x rperms)
       (if (not (< (- x unixread) 0))
-	  (setf perms (append perms
-			      (case state
-				(0 (list :user-read))
-				(1 (list :group-read))
-				(2 (list :other-read))))
-		x (- x unixread)))
+		  (setf perms (append perms
+							  (case state
+								(0 (list :user-read))
+								(1 (list :group-read))
+								(2 (list :other-read))))
+				x (- x unixread)))
       (if (not (< (- x unixwrite) 0))
-	  (setf perms (append perms
-			      (case state
-				(0 (list :user-write))
-				(1 (list :group-write))
-				(2 (list :other-write))))
-		x (- x unixwrite)))
+		  (setf perms (append perms
+							  (case state
+								(0 (list :user-write))
+								(1 (list :group-write))
+								(2 (list :other-write))))
+				x (- x unixwrite)))
       (if (equal x unixexec)
-	  (setf perms (append perms
-			      (case state
-				(0 (list :user-exec))
-				(1 (list :group-exec))
-				(2 (list :other-exec))))))
+		  (setf perms (append perms
+							  (case state
+								(0 (list :user-exec))
+								(1 (list :group-exec))
+								(2 (list :other-exec))))))
       (incf state))
     perms))
 
@@ -110,13 +110,13 @@
 (defun set-var (varname value)
   (let* ((vstat (getf *variables* varname)))
     (if (equal vstat nil)
-	(progn
-	  (pushnew value *variables*)
-	  (pushnew varname *variables*))
-	(progn
-	  (if (getf *varhdlrs* varname)
-	      (funcall (getf *varhdlrs* varname) value)
-	      (setf (getf *variables* varname) value))))))
+		(progn
+		  (pushnew value *variables*)
+		  (pushnew varname *variables*))
+		(progn
+		  (if (getf *varhdlrs* varname)
+			  (funcall (getf *varhdlrs* varname) value)
+			  (setf (getf *variables* varname) value))))))
 
 (defun set-var-handler (varname handler)
   (setf (getf *varhdlrs* varname) handler))
@@ -163,10 +163,10 @@
 				   (setf *debugging* T)
 				   (setf *debugging* nil)))
 			  (T (set-var (string-to-symbol var) value))))
-	  ;;; if the arg doesn't have an = sign, then assume it's a target
-	  (progn
-	    (set-var 'target x)
-	    (setf *target* x)))))
+;;; if the arg doesn't have an = sign, then assume it's a target
+		  (progn
+			(set-var 'target x)
+			(setf *target* x)))))
   (if (equal *target* nil)
       (setf *lmakefile* *lmfname*)
       (setf *lmakefile*
@@ -207,10 +207,10 @@
      (let* ((bf nil))
        (setf bf (read))
        (if (not (stringp bf))
-	   (progn
-	     (format t "lispmake: configure: error: invalid type~%")
-	     (force-output)
-	     (go start)))
+		   (progn
+			 (format t "lispmake: configure: error: invalid type~%")
+			 (force-output)
+			 (go start)))
        (set-var varname bf))))
 
 (defun configure-boolean (varname)
@@ -222,19 +222,19 @@
        (setf bf (read))
        (setf bf (string-upcase bf))
        (if (or
-	    (equal bf "Y")
-	    (equal bf "YES")
-	    (equal bf "TRUE"))
-	   (set-var varname (not nil))
-	   (if (or
-		(equal bf "N")
-		(equal bf "NO")
-		(equal bf "FALSE"))
-	       (set-var varname nil)
-	       (progn
-		 (format t "lispmake: configure: error: invalid input~%")
-		 (force-output)
-		 (go start)))))))
+			(equal bf "Y")
+			(equal bf "YES")
+			(equal bf "TRUE"))
+		   (set-var varname (not nil))
+		   (if (or
+				(equal bf "N")
+				(equal bf "NO")
+				(equal bf "FALSE"))
+			   (set-var varname nil)
+			   (progn
+				 (format t "lispmake: configure: error: invalid input~%")
+				 (force-output)
+				 (go start)))))))
 
 (defun configure-number (varname)
   (tagbody
@@ -244,22 +244,22 @@
      (let* ((bf nil))
        (setf bf (read))
        (if (not (numberp bf))
-	   (progn
-	     (format t "lispmake: configure: error: invalid input~%")
-	     (force-output)
-	     (go start)))
+		   (progn
+			 (format t "lispmake: configure: error: invalid input~%")
+			 (force-output)
+			 (go start)))
        (set-var varname bf))))
 
 (defun pl-configure (args)
   (dolist (x args)
     (if (not (listp x))
-	(lm-abort "must be a list of lists"))
+		(lm-abort "must be a list of lists"))
     (let* ((type (cadr x))
-	   (name (car x)))
+		   (name (car x)))
       (cond
-	((equal type :string) (configure-string name))
-	((equal type :boolean) (configure-boolean name))
-	((equal type :number) (configure-number name))))))
+		((equal type :string) (configure-string name))
+		((equal type :boolean) (configure-boolean name))
+		((equal type :number) (configure-number name))))))
 
 (defun set-default-mode (value)
   (cond

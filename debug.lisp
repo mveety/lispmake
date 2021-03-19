@@ -41,6 +41,6 @@
 (defmacro lm-advdebug (function fmt &rest forms)
   (if *debugging*
       (progn
-	(format t "lispmake: debug: ~A: " function)
-	`(format t ,fmt ,@forms)
-	(format t "~%"))))
+		(format t "lispmake: debug: ~A: " function)
+		`(format t ,fmt ,@forms)
+		(format t "~%"))))
