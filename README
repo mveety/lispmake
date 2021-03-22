@@ -1,9 +1,18 @@
-lispmake -- shitty makefiles for lisp
+lispmake -- sorta okay makefiles for lisp
+
+Requirements to build and use:
+	sbcl (support for other lisp implementations is either broken or
+		non-existent. Patches welcome.)
+	quicklisp (get it at https://www.quicklisp.org/beta/)
 
 How to build:
-if you have lispmake: lispmake ; lisp --load build.lisp
-if you have lispmake rev 11 or higher: lispmake
-if you don't have lispmake: lisp --load bootstrap.lisp
+	if you don't have lispmake:
+		sbcl --load bootstrap.lisp
+		./lispmake install
+
+	if you have lispmake:
+		lispmake
+		./lispmake install
 
 Targets:
 	By default lispmake looks for the file "LMakefile". If it doesn't
@@ -17,6 +26,14 @@ Other Files:
 	if you invoke lispmake like "lispmake file=[filename]" it
 	allows you to use that to build. Targets still work with the
 	normal convention of [filename].[target] .
+
+Overriding variables:
+	You can override the default variables by passing [var]=[value]
+	to lispmake at the command line. There are some special variables
+	that are set at the command line like "lisp" (override the default
+	lisp executable), "dobuild" (allow or prevent lispmake from running
+	it's output), and "debug" (enable a firehose of debugging output).
+	lisp takes a string and dobuild and debug both take a yes or a no.
 
 REVISION 14 NOTES:
 	This version will likely require bootstrapping if coming from a
@@ -43,12 +60,14 @@ REVISION 14 CHANGES:
 	Files are only generated if :generate is evaluated.
 	Executable output forms are only generated if package and toplevel
 		are set.
-	Added dobuild= command line variable. This overrides the makefile's
-	default.
+	Added dobuild= command line variable. This overrides the
+	makefile's default.
 	Added internal variable target. Hold what the currently executing
 		target is named.
 	Added ability to include other files (via :include)
 	Added ability to pass blocks of code as arguments (via :block)
 	Added ability to conditionally execute code if a variable exists
 		(via :if-defined)
+	Added support for using ASDF to fetch dependencies and build
+	projects. (via :asdf-*)
 
