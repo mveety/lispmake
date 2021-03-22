@@ -12,6 +12,8 @@
 (load #P"options.lisp")
 (load #P"core.lisp")
 (load #P"file-utils.lisp")
+(load #P"asdf.lisp")
+(load #P"asdf-deps.lisp")
 (load #P"lispmake.lisp")
 #+sbcl (sb-ext:save-lisp-and-die "lispmake" :executable t :toplevel #'LISPMAKE:MAIN)
 #+ccl (ccl:save-application lispmake :toplevel-function #'LISPMAKE:MAIN :prepend-kernel t)
