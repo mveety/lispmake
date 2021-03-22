@@ -35,8 +35,10 @@
 
 (defun lm-debug (function explain)
   (if *debugging*
-      (format t "lispmake: debug: ~A: ~A~%" function explain))
-  nil)
+	  (progn
+		(format t "lispmake: debug: ~A: ~A~%" function explain)
+		(force-output))
+	  nil))
 
 (defmacro lm-advdebug (function fmt &rest forms)
   (if *debugging*
