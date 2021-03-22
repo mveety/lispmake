@@ -1,0 +1,33 @@
+* Contributing to Lispmake
+Lispmake is under more or less active development, and is something that I
+have worked on on and off for quite a long time. It started before I was
+any good at Common Lisp and has accreted over the years. It needs a lot of
+work, and if you do help (thanks!), I'm deeply sorry about the swamp you're
+wading into.
+
+** Lisp support
+	Lispmake, on paper, somewhat supports ccl and clisp. This was thrown
+	in, and not really thought about or testing. Support for these two
+	needs to be fixed and expanded. The user's lisp implementation should
+	/just work/ with lispmake. Support really should be added for cmucl,
+	LispWorks, and Allegro, and it'd be cool if it could run on Genera, and
+	whatever else you can think of.
+
+** Code cleanups and redesigns
+	Lispmake hasn't been designed and little to no forethought went into
+	any of it's code. The codebase reflects that and parts really need to
+	be rewritten to make them easier to read and more bug-free. A specific
+	area that really needs this is variables. Not all command can take
+	variables and lispmake itself is configured using a mix of lispmake and
+	common lisp variables. Some of this has been fixed over time but it's
+	still a complete and utter mess.
+
+** New functionality
+	Lispmake, basically, only has features that I've needed from time to
+	time. More integration between lispmake, asdf, and quicklisp would be
+	lovely so it could theoretically be used in more situations. The plugin
+	system could also use some expansion. It should be able to load files
+	to add new commands, functionality, or behaviour, but support of that
+	is incomplete at best. Internally almost all commands are implemented
+	using the plugin system, but as of now it hasn't been exposed to the
+	user.
