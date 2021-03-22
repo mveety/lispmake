@@ -14,11 +14,12 @@ Lispmake functions
     create a variable and sets the value to value
     if variable is created then set the value
 
-(:install :file :to :mode)
-    keywords file -- string
+(:install :file filename :to path :mode mode-string)
+    keyword file -- string
+    keyword to -- string
     keyword mode -- list of keywords. see vars.lisp for an example
-    Installs a file to a target. Works similar
-    to install(1) but not exactly.
+    Copies the file filename to path. Sets the permissions base on
+    the mode-string.
 
 (:package arg)
     arg -- symbol
@@ -40,7 +41,7 @@ Lispmake functions
     arg -- string
     Defines the compiler to run build.lisp
 
-(:do-build nil)
+(:do-build)
     No Arguments
     Enables running the compiler after generation
     of build.lisp
@@ -52,11 +53,11 @@ Lispmake functions
 
 (:output arg)
     arg -- string
-    Defines the file to put the compilers result
+    Defines the compiler's output file
 
-(:generate nil)
+(:generate)
     No Arguments
-    enables build.lisp generation
+    enables run-target.lisp generation
 
 (:eval forms...)
     forms -- lisp forms
@@ -68,7 +69,7 @@ Lispmake functions
 
 (:require-file file)
 	file -- string
-	Check to see if a file exists
+	Check to see if a file exists and abort if missing.
 
 (:eval forms...)
 	forms -- lisp forms
@@ -81,12 +82,38 @@ Lispmake functions
 	file -- string
 	Load an execute external lispmake file.
 
-(:block lmake-forms...)
-	lmake-forms -- valid lispmake forms
-	encapsulate and execute the forms in the arguments
+(:block forms...)
+	forms -- valid lispmake forms
+	encapsulate and execute the forms in the arguments	
+
+(:apply-prefix)
+	Reset bindir, libdir, and etcdir based on prefix
 
 (:if-defined varname form)
 	varname -- variable
 	form -- valid lispmake form
 	execute lispmake form is a variable is defined
+
+(:asdf-add-registry directory)
+	directory -- string
+	Add a directory to asdf:*central-registry*
+
+(:asdf-load-system system)
+	system -- string
+	Load an ASDF system
+
+(:asdf-quickload system)
+	system -- string
+	Add the system's dependencies to the list of quicklisp packages
+	to be loaded. If the name of a dependency of the system is
+	prefixed by the system's name, assume that system is part of the
+	program to be build and process it's dependencies as well. 
+	For example: if the system "test" has dependencies named
+	"test-utilities" and "test-core", lispmake will also add the
+	dependencies of "test-utilities" and "test-core" to the list of
+	quickloads.
+
+(:asdf-make system)
+	system -- string
+	run asdf:make on the system.
 

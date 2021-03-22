@@ -33,7 +33,7 @@
 		(let* ((cmd (car forms))
 			   (args (cdr forms))
 			   (pfun (getf *plugins* cmd)))
-		  (lm-debug "runner" (format nil "cmd = ~A, args = ~A~%" cmd args))
+		  (lm-debug "runner" (format nil "cmd = ~A, args = ~A" cmd args))
 		  (if (nilp pfun)
 			  (lm-error "runner" (format nil "unknown command: ~A" cmd))
 			  (funcall pfun args))))))
@@ -55,13 +55,13 @@
 		(with-open-file (incfile fname)
 		  (loop for form = (read incfile nil nil)
 				until (eq form nil) do
-				  (lm-debug "include" (format nil "reading form: ~A~%" form))
+				  (lm-debug "include" (format nil "reading form: ~A" form))
 				  (runner form)))
-		(lm-error "include" (format nil "file not found: ~A~%" fname)))))
+		(lm-error "include" (format nil "file not found: ~A" fname)))))
 
 (defun pl-block (args)
   (dolist (x args)
-    (lm-debug "block" (format nil "reading form ~A~%" x))
+    (lm-debug "block" (format nil "reading form ~A" x))
     (runner x)))
 
 (defun pl-if-defined (args)
@@ -79,7 +79,10 @@
   (initialize-vars)
   (initialize-asdf-vars)
   (if *debugging*
-      (format t "lispmake r~A~%" *lispmake-version*)
+      (progn
+		(format t "lispmake r~A~%" *lispmake-version*)
+		(format t "(c) Matthew Veety 2012-2021. Under BSD License.~%")
+		(format t "Please report bugs to https://github.com/mveety/lispmake~%~%"))
       (disable-debugger))
   (install-plugin :package 'pl-package)
   (install-plugin :toplevel 'pl-toplevel)
@@ -129,11 +132,11 @@
     (loop for form = (read lmkfile nil nil)
 		  until (eq form nil)
 		  do (progn
-			   (lm-debug "main" (format nil "reading form ~A~%" form))
+			   (lm-debug "main" (format nil "reading form ~A" form))
 			   (runner form)))
     (if *generate*
 		(progn
-		  (lm-debug "main" (format nil "generating run-~A.lisp~%" (output-fname)))
+		  (lm-debug "main" (format nil "generating run-~A.lisp" (output-fname)))
 		  (generate))))
   (if *debugging*
 	  (progn

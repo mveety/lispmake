@@ -25,10 +25,11 @@ toplevel ~A and running ~A~%"
       (lm-error "load-plugin" "arg name should be type keyword")))
 
 (defun install-plugin (name toplevel)
-  (lm-debug "install-plugin" "installing a plugin")
   (if *debugging*
       (format t "lispmake: debug: installing plugin ~A with toplevel ~A~%"
-			  name toplevel))
+			  name (if (functionp toplevel)
+					   "#<FUNCTION>"
+					   toplevel)))
   (if (or (functionp toplevel)
 		  (symbolp toplevel))
       (if (keywordp name)
@@ -42,7 +43,7 @@ toplevel ~A and running ~A~%"
     (lambda (args) ,@list-of-forms)))
 
 (defun run-plugin-pregen (x)
-  (lm-debug "run-plugin-pregen" "running pregeneration hooks")
+  (lm-debug "run-plugin-pregen" "running pre-generation hooks")
   (let ((*standard-output* x))
     (if (not (equal *pregen-hooks* nil))
 		(dolist (y *pregen-hooks*)
@@ -50,7 +51,7 @@ toplevel ~A and running ~A~%"
 		nil)))
 
 (defun run-plugin-postgen (x)
-  (lm-debug "run-plugin-pregen" "running postgeneration hooks")
+  (lm-debug "run-plugin-postgen" "running post-generation hooks")
   (let ((*standard-output* x))
     (if (not (equal *postgen-hooks* nil))
 		(dolist (y *postgen-hooks*)
@@ -58,13 +59,13 @@ toplevel ~A and running ~A~%"
 		nil)))
 
 (defun install-pregen-hook (fname)
-  (lm-debug "install-pregen-hook" "adding pregeneration hook")
+  (lm-debug "install-pregen-hook" (format nil "adding pre-generation hook ~A" fname))
   (if (not (equal (type-of fname) 'symbol))
       (lm-warning "install-pregen-hook" "fname is not of type symbol")
       (setf *pregen-hooks* (append *pregen-hooks* (list fname)))))
 
 (defun install-postgen-hook (fname)
-  (lm-debug "install-postgen-hook" "adding postgeneration hook")
+  (lm-debug "install-postgen-hook" (format nil "adding post-generation hook ~A" fname))
   (if (not (equal (type-of fname) 'symbol))
       (lm-warning "install-postgen-hook" "fname is not of type symbol")
       (setf *postgen-hooks* (append *postgen-hooks* (list fname)))))

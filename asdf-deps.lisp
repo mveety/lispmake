@@ -41,7 +41,7 @@
 		 (local-deps (cadr deps-lists))
 		 (returned-deps nil))
 	(lm-debug "get-system-depends"
-			  (format nil "~A: looking at ~A from parent ~A:~%found-list = ~A~%"
+			  (format nil "~%  ~A: looking at ~A from parent ~A:~%found-list = ~A"
 					  step sysname parent found-list))
 	(dolist (x global-deps)
 	  (if (equal found-list nil)
