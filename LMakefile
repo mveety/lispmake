@@ -2,7 +2,6 @@
 (:toplevel main)
 (:quicklisp unix-options split-sequence osicat cl-fad)
 (:lisp all)
-(:build-with "/usr/local/bin/sbcl")
 (:do-build)
 (:file "package.lisp"
 	"vars.lisp"
