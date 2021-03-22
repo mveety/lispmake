@@ -1,5 +1,8 @@
 (in-package :lispmake)
 
+;; lispmake, written by Matthew Veety, et al.
+;; (c) Matthew Veety 2012-2021. Under BSD License.
+
 (defmacro append-to-list (lst elem)
   `(setf ,lst (append ,lst (list ,elem))))
 
